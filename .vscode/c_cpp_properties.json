@@ -1,7 +1,8 @@
 {
     "configurations": [
         {
-            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags",
+            "intelliSenseMode": "msvc-x64"
         },
         {
             "name": "Win32",
@@ -258,5 +259,6 @@
             "cppStandard": "c++11",
             "compilerPath": "C:/Users/ozzii/.platformio/packages/toolchain-xtensa32/bin/xtensa-esp32-elf-gcc.exe -mlongcalls"
         }
-    ]
+    ],
+    "version": 4
 }

@@ -4,9 +4,9 @@
 #include "plugin_base.h"
 #include "plugin_sensor.h"
 
-#ifndef ESP32
+
 #include <SoftwareSerial.h>
-#endif
+
 
 /****************************************************************
 *            
@@ -30,7 +30,7 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
             sensor_delay = atol(config[2].c_str()) * 1000;
             trig_pin = atoi(config[3].c_str());
             echo_pin = atoi(config[4].c_str());
-#ifndef ESP32
+
             serial = new SoftwareSerial(
                 pins::convertPin(trig_pin),
                 pins::convertPin(echo_pin),
@@ -42,7 +42,6 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
             // IO.setMode(echo_pin,INPUT_PULLUP_MODE);
             // IO.setMode(trig_pin,OUTPUT_MODE);
             //IO.writeDigital(echo_pin,HIGH);
-#endif
             initialized = true;
 
 #ifdef DEBUG
@@ -59,7 +58,6 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
 
     void execute_sensor() override
     {
-#ifndef ESP32
         serial->flush();
 
         int i = 0;
@@ -90,7 +88,6 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
         DEBUG_MSG_P(PSTR("[JSN][%s] DITANCE IS %d mm \n"), name.c_str(), distance);
 #endif
 
-#endif
 
         /*
         IO.writeDigital(trig_pin,LOW); // Set the trigger pin to low for 2uS
@@ -111,9 +108,9 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
     static const char *ClassName() { return "JSN-SR04T-V2"; }
 
   private:
-#ifndef ESP32
+
     SoftwareSerial *serial;
-#endif
+
     uint8_t echo_pin;
     uint8_t trig_pin;
 };

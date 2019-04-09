@@ -66,7 +66,7 @@
 * ============================= DISPLAY ====================================
 * ===========================================================================*/
 
-#define NEXTION
+//#define NEXTION
 
 #ifdef NEXTION
 #define NEXTION_BLAUD 9600
@@ -166,8 +166,10 @@
 
 #define WEBSERVER
 
+
 #ifdef WEBSERVER
 
+#define JSON_DOCUMENT_SIZE  1024
 
 #ifdef ESP32
 #define WEBSERVER_START_DELAY  5

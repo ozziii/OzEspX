@@ -10,7 +10,6 @@
 #include <plugin_interrupt.h>
 #include <plugin_response.h>
 
-#include "system_plugin.h"
 #include "alive.h"
 #include "freeRam.h"
 #include "ddns.h"

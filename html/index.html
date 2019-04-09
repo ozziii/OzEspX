@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>ESP-MQTT</title>
+    <meta charset="utf-8" />
+    <!-- shortcut::html/favicon.ico -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- build:css style.css -->
+    <link rel="stylesheet" href="jquery-confirm.min.css" />
+    <link rel="stylesheet" href="main.css" />
+    <!-- endbuild -->
+
+</head>
+
+<body>
+    <div class="body">
+        <input type="hidden" value="" id="updateResult">
+
+        <div class="body_intestation"> ESP-MQTT DOMOTIC FIRMWARE </div>
+
+        <div id="Parameters" class="body_Parameters">
+        </div>
+
+
+        <div class="body_button">
+            <div class="cointainer_button">
+                <button id="refresh_button" class="head_button green_button">Ricarica Pagina</button>
+            </div>
+            <div class="cointainer_button">
+                <button id="submit_button" class="head_button blue_button">Aggiorna Settings</button>
+            </div>
+            <div class="cointainer_button">
+                <button id="restart_button" class="head_button yellow_button">Riavvia Device</button>
+            </div>
+            <div class="cointainer_button">
+                <button id="reset_button" class="head_button red_button">Resetta Device</button>
+            </div>
+            <div class="cointainer_button">
+                <button id="unlock_button" class="head_button yellow_button" style="display: none;" >Sblocca Device</button>
+            </div>
+        </div>
+
+        <div class="body_setting">
+            <table id="table_setting">
+            </table>
+        </div>
+        <div class="foot">
+            <div id="PlugIns" class="body_plugin">
+
+            </div>
+        </div>
+</body>
+
+
+
+<script id="entry-template" type="text/x-handlebars-template">
+    <tr>
+        <th>ID</th>
+        <th>SIZE</th>
+        <th>VALUE</th>
+        <th></th>
+    </tr>
+    {{#setting}}
+        <tr>
+            <td class="container_key" ><input type="text" id="key_{{key}}" value="{{key}}" class="setting_key" disabled="disabled"></td>
+            <td class="container_size"><input type="text" id="size_{{key}}" value="{{size}}" class="setting_size" disabled="disabled"></td>
+            <td class="container_value">
+                <input type="text" id="value_{{key}}" value="{{value}}" class="setting_value" onchange="valueChange('{{key}}')" >
+                <input type="hidden" id="hidden_{{key}}" value="{{value}}" >
+            </td>
+            <td class="container_send">
+                <button   id="restore_{{key}}" hidden="hidden" class="setting_restore" onclick="restore('{{key}}')" >
+                    R
+                </button>
+            </td>
+        </tr>
+    {{/setting}}
+</script>
+
+<script id="head-template" type="text/x-handlebars-template">
+    {{#parameters}}
+    <div class="container_Parameters" >
+        <div class="caption">{{key}} :</div>
+        <div class="label" id="dev_name_{{key}}"> {{value}} </div>
+    </div>
+    {{/parameters}}
+</script>
+
+<script id="plugin-template" type="text/x-handlebars-template">
+    {{#plugin}}
+    <div class="container_plugin" >
+        <div class="plugin_name">{{key}}</div>
+        <div class="plugin_value">{{value}}</div>
+    </div>
+    {{/plugin}}
+</script>
+
+<!-- build:js script.js -->
+<script src="jquery-3.2.1.min.js"></script>
+<script src="jquery-confirm.min.js"></script>
+<script src="mustache.min.js"></script>
+<script src="custom.js"></script>
+<!-- endbuild -->
+
+</html>

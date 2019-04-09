@@ -1,0 +1,186 @@
+body{
+   background:  #555;
+}
+
+.body{
+    max-width: 80%;
+    min-width: 550px;
+    margin: auto;
+    background: white;
+    padding: 10px;
+    text-align: center;
+}
+
+
+.body_intestation{
+    margin: auto;
+    margin-bottom: 3ex;
+}
+
+/***********  PARAMETER ZONE ********/
+
+.body_Parameters{
+    margin: auto;
+    margin-bottom: 3ex;
+}
+
+.container_Parameters
+{
+    display: inline-block;
+    margin: 0.5ex;
+}
+
+.caption{
+    padding: 0.3ex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15); 
+    display: inline;
+}
+
+.label{
+    padding: 0.3ex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15); 
+    display: inline;
+}
+
+
+/***********  BUTTON ZONE ********/
+
+.body_button{
+    margin: auto;
+    margin-bottom: 3ex;
+}
+
+.cointainer_button{
+    display: inline;
+}
+
+
+.head_button{
+    display: inline-block;
+    border-radius: 8px;
+    width: 20ex;
+    border: 1px solid transparent;
+    padding: 0.5ex;
+    margin: 0.5ex;
+}
+
+.green_button{
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.blue_button{
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.yellow_button{
+    color: #fff;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.red_button{
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+
+}
+
+
+/***********  SETTING ZONE ********/
+
+
+
+
+.body_setting{
+    display: block;
+    margin: auto;
+    padding: 10px;
+}
+
+
+#table_setting{
+    margin: auto;
+}
+
+
+.setting_key {
+    border: none;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 0.5ex;
+}
+
+.setting_size{
+    border: none;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    width: 5ex;
+    padding: 0.5ex;
+    
+}
+
+
+.setting_value {
+    border: none;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 0.5ex;
+    width: 40ex;
+}
+
+.setting_value:focus {
+    touch-action: manipulation;
+    
+}
+
+.value_changed 
+{
+    border-bottom: 2px solid rgb(110, 28, 28);
+    font-weight: bold;
+}
+
+.setting_restore {    
+    padding: 1px;
+    box-sizing: border-box;
+    border: solid 1px #ccc;
+    border-radius: 0;
+    background-color: #fff;
+
+}
+
+
+
+
+
+/***********  PLUGIN ZONE ********/
+
+.foot{
+    margin: auto;    
+}
+
+.body_plugin{
+    display: block;
+    padding: 10ex;   
+}
+
+.container_plugin{
+    display: block;
+    margin: 2ex;
+    margin-top: 5ex;
+}
+
+.plugin_name{
+    margin: auto; 
+    width: max-content;
+    font-weight: bold;
+}
+
+.plugin_value{
+    margin: auto; 
+    width: max-content;
+    border-top: 2px solid rgba(0, 0, 0, 0.15);
+}

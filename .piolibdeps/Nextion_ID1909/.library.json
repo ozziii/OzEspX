@@ -1,0 +1,39 @@
+{
+    "name": "Nextion", 
+    "keywords": [
+        "hmi", 
+        "display"
+    ], 
+    "description": "A simple Nextion HMI library for Arduino", 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/bborncr/nextion.git"
+    }, 
+    "version": "1.0.0", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "atmelavr", 
+        "atmelsam", 
+        "espressif32", 
+        "espressif8266", 
+        "intel_arc32", 
+        "microchippic32", 
+        "nordicnrf51", 
+        "nordicnrf52", 
+        "ststm32", 
+        "teensy", 
+        "timsp430"
+    ], 
+    "homepage": "https://github.com/bborncr/nextion", 
+    "authors": [
+        {
+            "email": "bentley@crcibernetica.com", 
+            "url": "https://github.com/bborncr", 
+            "maintainer": false, 
+            "name": "Bentley Born"
+        }
+    ], 
+    "id": 1909
+}

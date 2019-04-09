@@ -1,0 +1,29 @@
+{
+    "name": "SoftwareSerialEsp32", 
+    "keywords": [
+        "serial", 
+        "io", 
+        "softwareserial"
+    ], 
+    "description": "Implementation of the Arduino software serial for ESP32.", 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/jdollar/espsoftwareserial.git"
+    }, 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "espressif8266"
+    ], 
+    "version": "6d373ecd5f", 
+    "authors": [
+        {
+            "email": "dollarhidejoel@gmail.com", 
+            "url": "https://github.com/jdollar", 
+            "maintainer": false, 
+            "name": "Joel Dollarhide"
+        }
+    ], 
+    "id": 5511
+}

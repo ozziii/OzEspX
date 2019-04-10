@@ -1,9 +1,0 @@
-First at all very thanks to Xose Pérez for your public code Espurna.
-
-
-Base on Espurna (https://github.com/xoseperez/espurna) 
-Plug-in based configuration
-Work on ESP32 and ESP8266
-No Ota update
-Only MQTT interface
-Web GUI configuration

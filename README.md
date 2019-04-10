@@ -68,17 +68,10 @@ In bottom of web gui there are list of all current plug-in with her initializati
    * [Pull up 1:0]=0
    
 
-* Generic Switch
 * Generic Bistable Relay
 * DHT22 (temperature and humidity)
 * JSN-SR047-V2 (distance)
 * PZEM004T (AC current / power)
-* Generic radio frequency reciver
 * PWM LED White and RGB 
-* Nextion Display
-* DDNS updater 
-    
-    
-## MQTT 
 
 

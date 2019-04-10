@@ -104,6 +104,18 @@ void SettingClass::RestoreDefault()
     EEPROM.commit();
 }
 
+
+void SettingClass::InitSettings()
+{
+    uint8_t db_version = EEPROM.read(DB_VERSION_INDEX);
+
+    if(DB_VERSION != db_version)
+    {
+        EEPROM.write(DB_VERSION_INDEX, DB_VERSION);
+        RestoreDefault();
+    } 
+}
+
 void SettingClass::Store(Parameter item, uint16_t index)
 {
     for (int i = 0; i < strlen(item.value); i++)

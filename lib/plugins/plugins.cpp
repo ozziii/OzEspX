@@ -11,8 +11,6 @@ const html_plugin plugin_list[] = {
 
     {ddns::ClassName(), "[*]/[NAME]/[delay]"},
 
-    {JSNSR04TV2::ClassName(), "[*]/[NAME]/[delay]/[trig pin]/[echo pin]"},
-
     {DHT22Plugin::ClassName(), "[*]/[NAME]/[delay]/[pin]"},
 
     {switchPinState::ClassName(), "[*]/[NAME]/[out pin]/[read pin]/[delay]=0/[out logic 1:0]=1/[read logic 1:0]=1/[start out pin 1:0]=0/[Pull up 1:0]=0"},
@@ -21,14 +19,19 @@ const html_plugin plugin_list[] = {
 
     {switchSelfState::ClassName(), "[*]/[NAME]/[pin]/[delay]=0/[logic 1:0]=1/[start 1:0]=0"},
 
-    {PZEM004T_o::ClassName(), "[*]/[NAME]/[delay]/[Hardware(0):Software(1)]/[Serial or Tx pin]=2/[Rx pin]=0"},
-
     {led_plugin::ClassName(), "[*]/[NAME]/[min 0:1024]/[max 0:1024]/[Wite pin or R-G-B ]/[Dimmer Logic 1:0] = 1/[On-Off pin]?/[ON-Off Logic 1:0] = 1"},
 
     {bistableRelayPinStateNI::ClassName(), "[*]/[NAME]/[action pin]/[read pin]/[delay]=0/[action logic 1:0]=1/[read logic 1:0]=1/[start action pin 1:0]=0/[Pull up 1:0]=0"},
 
     {binary_sensor::ClassName(), "[*]/[NAME]/[read pin]/[delay (s)]=0/[read logic 1:0]=1/[Pull up 1:0]=0"},
 
+#ifdef PLUGIN_PZEM004T
+    {PZEM004T_o::ClassName(), "[*]/[NAME]/[delay]/[Hardware(0):Software(1)]/[Serial or Tx pin]=2/[Rx pin]=0"},
+#endif
+
+#ifdef PLUGIN_JSNSR04TV2
+    {JSNSR04TV2::ClassName(), "[*]/[NAME]/[delay]/[trig pin]/[echo pin]"},
+#endif
 
 #ifdef PLUGIN_RADIOFREQUENCY_REVICER
     {bistableRelayPinStateNI::ClassName(), "[*]/[NAME]/[sensor pin]/[switch pin]/[relay logic 1:0]/[valid key]"},
@@ -49,7 +52,6 @@ void plugins_o::createPlugIn(
     // empty string check
     if (initString.length() == 0)
         return;
-
 
     int index = initString.indexOf('/');
 
@@ -146,6 +148,7 @@ void plugins_o::createPlugIn(
         return;
     }
 
+#ifdef PLUGIN_JSNSR04TV2
     //************** JSN-SR04T-V2 PLUGIN *************
     if (strcmp(name, JSNSR04TV2::ClassName()) == 0)
     {
@@ -156,7 +159,9 @@ void plugins_o::createPlugIn(
         }
         return;
     }
+#endif
 
+#ifdef PLUGIN_PZEM004T
     //************** PZEM_004T PLUGIN *************
     if (strcmp(name, PZEM004T_o::ClassName()) == 0)
     {
@@ -167,6 +172,7 @@ void plugins_o::createPlugIn(
         }
         return;
     }
+#endif
 
     //************** PZEM_004T PLUGIN *************
     if (strcmp(name, led_plugin::ClassName()) == 0)
@@ -217,7 +223,6 @@ void plugins_o::createPlugIn(
     }
 #endif
 
-
 #ifdef NEXTION
     //************** NEXTION DISPLAY PUGIN *************
     if (strcmp(name, nextion_plugin::ClassName()) == 0)
@@ -231,7 +236,6 @@ void plugins_o::createPlugIn(
         return;
     }
 #endif
-
 };
 
 html_plugin plugins_o::get(uint8_t index)

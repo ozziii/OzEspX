@@ -1,3 +1,6 @@
+#include "configuration.h"
+
+#ifdef PLUGIN_JSNSR04TV2
 #ifndef JSNSR04TV2_H
 #define JSNSR04TV2_H
 
@@ -37,11 +40,8 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
                 false,
                 256);
 
-            serial->begin(9600);
+            serial->begin(9600,SWSERIAL_8N1);
 
-            // IO.setMode(echo_pin,INPUT_PULLUP_MODE);
-            // IO.setMode(trig_pin,OUTPUT_MODE);
-            //IO.writeDigital(echo_pin,HIGH);
             initialized = true;
 
 #ifdef DEBUG
@@ -115,4 +115,5 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
     uint8_t trig_pin;
 };
 
+#endif
 #endif

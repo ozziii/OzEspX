@@ -17,11 +17,18 @@
 #include "switchPinState.h"
 #include "bistableRelayPinState.h"
 #include "switchSelfState.h"
-#include "JSN-SR04T-V2.h"
-#include "PZEM004T_o.h"
 #include "led_plugin.h"
 #include "bistableRelayPinStateNI.h"
 #include "binary_sensor.h"
+
+
+#ifdef PLUGIN_PZEM004T
+#include "PZEM004T_o.h"
+#endif
+
+#ifdef PLUGIN_JSNSR04TV2
+#include "JSN-SR04T-V2.h"
+#endif
 
 #ifdef PLUGIN_RADIOFREQUENCY_REVICER
 #include "RF_Rx_Switch.h"

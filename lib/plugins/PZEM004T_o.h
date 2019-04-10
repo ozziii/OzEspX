@@ -1,3 +1,7 @@
+#include "configuration.h"
+
+#ifdef PLUGIN_PZEM004T
+
 #ifndef PZEM_004T_H
 #define PZEM_004T_H
 
@@ -153,4 +157,5 @@ class PZEM004T_o : public plugin_base, public plugin_sensor
     IPAddress ip;
 };
 
+#endif
 #endif

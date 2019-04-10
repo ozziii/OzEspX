@@ -33,8 +33,10 @@ void setup()
     // Initialize EEPROM setting string
     Setting.begin();
 
-#ifdef INIT_SETTING
+#ifdef FORCE_INIT_SETTING
     Setting.RestoreDefault();
+#else
+    Setting.InitSettings();
 #endif
 
     System.begin();

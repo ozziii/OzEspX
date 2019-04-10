@@ -1,3 +1,7 @@
+#include "configuration.h" //TODO REMOVE
+
+#ifdef NEXTION
+
 /*
 HMI Nextion Library
 Itead NX4827T043_011
@@ -94,4 +98,5 @@ protected:
   size_t serial_write(int n);
   void serial_flush();
 };
+#endif
 #endif

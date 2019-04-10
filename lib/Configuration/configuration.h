@@ -33,7 +33,7 @@
 
 #endif
 
-//#define INIT_SETTING
+//#define FORCE_INIT_SETTING
 
 /*===========================================================================
 * ============================= SYSTEM CONFIGURATION ========================
@@ -82,6 +82,9 @@
 
 #define STABILITY_INDEX 0
 #define START_TIME 1
+#define DB_VERSION_INDEX 2
+
+#define DB_VERSION 5
 
 /*===========================================================================
 * ============================= WIFI CONFIGURATION ==========================
@@ -222,3 +225,5 @@
 */
 
 //#define PLUGIN_RADIOFREQUENCY_REVICER
+//#define PLUGIN_JSNSR04TV2
+//#define PLUGIN_PZEM004T

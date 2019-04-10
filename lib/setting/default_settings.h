@@ -33,8 +33,8 @@ const Parameter Parameters[] PROGMEM = {
     { 16  , "" , "GATEWAY" },     //GATEWAY
     { 16  , "" , "SUBNETMASK" },   //SUBNET MASK
     { 16  , "" , "DNS" },         //DNS
-    { 5   , ""  , "WEBPORT" },              //Server PORT
-    { 5   , "" ,"DebouncingInterrupt" }, 
+    { 5   , "80"  , "WEBPORT" },              //Server PORT
+    { 5   , "200" ,"DebouncingInterrupt" }, 
     { 25   , "" ,"ITEM0" },
     { 25   , "" ,"ITEM1" },
     { 25   , "" ,"ITEM2" },

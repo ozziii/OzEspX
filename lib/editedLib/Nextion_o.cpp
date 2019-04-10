@@ -1,3 +1,6 @@
+#include "configuration.h" //TODO REMOVE
+
+#ifdef NEXTION
 /*
 HMI Nextion Library
 
@@ -452,3 +455,5 @@ void Nextion::serial_flush()
     hard_nextion->flush();
   }
 }
+
+#endif

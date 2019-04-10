@@ -37,6 +37,8 @@ class SettingClass
 
     void RestoreDefault();
 
+    void InitSettings();
+
   private:
     void Store(Parameter item, uint16_t index);
 

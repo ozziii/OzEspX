@@ -1,4 +1,4 @@
-// #include "configuration.h" //TODO REMOVE
+#include "configuration.h" //TODO REMOVE
 
 #ifdef NEXTION
 #ifndef NEXTION_PLUGIN

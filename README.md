@@ -148,10 +148,10 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    
    MQTT send topic
    * **Topic:** (espname)/(plug-in name)/state            **Message:** "ON" or "OFF" 
-   * **Topic:** (espname)/(plug-in name)/brightnessstate  **Message:**  number 0  to 100 
+   * **Topic:** (espname)/(plug-in name)/brightnessstate  **Message:**  number 0  to 255 
    * **Topic:** (espname)/(plug-in name)/rgbstate         **Message:**  tre numbers from 0 to 255 in format "r,g,b" 
   
    MQTT recive topic
    * **Topic:** (espname)/(plug-in name)/action            **Message:** "ON" or "OFF"
-   * **Topic:** (espname)/(plug-in name)/brightnessaction  **Message:**  number 0  to 100 
+   * **Topic:** (espname)/(plug-in name)/brightnessaction  **Message:**  number 0  to 255 
    * **Topic:** (espname)/(plug-in name)/rgbaction         **Message:**  tre numbers from 0 to 255 in format "r,g,b"

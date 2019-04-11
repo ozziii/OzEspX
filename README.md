@@ -155,3 +155,17 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    * **Topic:** (espname)/(plug-in name)/action            **Message:** "ON" or "OFF"
    * **Topic:** (espname)/(plug-in name)/brightnessaction  **Message:**  number 0  to 255 
    * **Topic:** (espname)/(plug-in name)/rgbaction         **Message:**  tre numbers from 0 to 255 in format "r,g,b"
+   
+   
+   * **SWITCH_SELF_STATE** ..... 
+   
+   Initialization String [#]/[NAME]/[action pin]/[delay]=0/[action logic 1:0]=1/[start action pin 1:0]=0
+   
+   * **NEXTION** ..... 
+   
+   Initialization String [#]/[NAME]/[delay (ms)]/[Hardware Serial]
+   
+   * **RF_Rx_Switch** ..... 
+   
+   Initialization String [#]/[NAME]/[sensor pin]/[switch pin]/[relay logic 1:0]/[valid key]
+  

@@ -103,7 +103,7 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    
    Initialization String [#]/[NAME]/[action pin]/[read pin]/[delay]=0/[action logic 1:0]=1/[read logic 1:0]=1/[start action pin 1:0]=0/[Pull up 1:0]=0
    * [#]                         Plug-in id
-   * [NAME]                      A simple name (es. dht_bedroom)
+   * [NAME]                      A simple name (es. lamp_bedroom)
    * [delay]                     Delay in second 
    * [action logic 1:0]=1        1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
    * [read logic 1:0]=1          1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
@@ -121,7 +121,7 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    
    Initialization String [#]/[NAME]/[action pin]/[read pin]/[delay]=0/[action logic 1:0]=1/[read logic 1:0]=1/[start action pin 1:0]=0/[Pull up 1:0]=0
    * [#]                         Plug-in id
-   * [NAME]                      A simple name (es. dht_bedroom)
+   * [NAME]                      A simple name (es. light_bedroom)
    * [delay]                     Delay in second 
    * [action logic 1:0]=1        NO USEFULL SET IT 1 
    * [read logic 1:0]=1          1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
@@ -133,3 +133,25 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
   
    MQTT recive topic
    * **Topic:** (espname)/(plug-in name)/action  **Message:** "ON" or "OFF"
+
+* **LED DIMMER** this plugin  provide to control single or RGB led by PWM arduino function. 
+   
+   Initialization String [#]/[NAME]/[min 0:1024]/[max 0:1024]/[Wite pin or R-G-B ]/[Dimmer Logic 1:0] = 1/[On-Off pin]?/[ON-Off Logic 1:0] = 1
+   * [#]                         Plug-in id
+   * [NAME]                      A simple name (es. tv_led)
+   * [min 0:1024]                min PWM value
+   * [max 0:1024]                max PWM value
+   * [Wite pin or R-G-B ]        If Single Led set **GPIO number**. if is RGB led set **GPIO number red**-**GPIO number green**-**GPIO number blue**
+   * [Dimmer Logic 1:0] = 1      Dimmer logic 1 => HIGH TO LOW  0 => LOW TO HIGH
+   * [On-Off pin]?               If is present different pin for turn on/off set **GPIO number**. else not add other '/' character
+   * [ON-Off Logic 1:0] = 1      1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
+   
+   MQTT send topic
+   * **Topic:** (espname)/(plug-in name)/state            **Message:** "ON" or "OFF" 
+   * **Topic:** (espname)/(plug-in name)/brightnessstate  **Message:**  number 0  to 100 
+   * **Topic:** (espname)/(plug-in name)/rgbstate         **Message:**  tre numbers from 0 to 255 in format "r,g,b" 
+  
+   MQTT recive topic
+   * **Topic:** (espname)/(plug-in name)/action            **Message:** "ON" or "OFF"
+   * **Topic:** (espname)/(plug-in name)/brightnessaction  **Message:**  number 0  to 100 
+   * **Topic:** (espname)/(plug-in name)/rgbaction         **Message:**  tre numbers from 0 to 255 in format "r,g,b"

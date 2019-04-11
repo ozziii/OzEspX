@@ -141,7 +141,7 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    * [NAME]                      A simple name (es. tv_led)
    * [min 0:1024]                min PWM value
    * [max 0:1024]                max PWM value
-   * [Wite pin or R-G-B ]        If Single Led set **GPIO number**. if is RGB led set **GPIO number red**-**GPIO number green**-**GPIO number blue**
+   * [Wite pin or R-G-B ]        If Single Led set **GPIO number**. if is RGB led set **GPIO number red**-**GPIO number green**-**GPIO number blue** (example 4-5-6)
    * [Dimmer Logic 1:0] = 1      Dimmer logic 1 => HIGH TO LOW  0 => LOW TO HIGH
    * [On-Off pin]?               If is present different pin for turn on/off set **GPIO number**. else not add other '/' character
    * [ON-Off Logic 1:0] = 1      1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE

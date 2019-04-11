@@ -5,7 +5,6 @@ const html_plugin plugin_list[] PROGMEM = {
 #else
 const html_plugin plugin_list[] = {
 #endif
-    {alive::ClassName(), "[*]/[NAME]/[delay]"},
 
     {FreeRAMPlugin::ClassName(), "[*]/[NAME]/[delay]"},
 
@@ -65,17 +64,6 @@ void plugins_o::createPlugIn(
         return;
 
     const char *name = Get_CONFIG_P(&plugin_list[key]).name;
-
-    //************** ALIVE PLUGIN *************
-    if (strcmp(name, alive::ClassName()) == 0)
-    {
-        alive *item = new alive(initString.c_str());
-        if (item->isInitialized())
-        {
-            _sensors->push_back(item);
-        }
-        return;
-    }
 
     //************** FREE RAM PLUGIN *************
     if (strcmp(name, FreeRAMPlugin::ClassName()) == 0)

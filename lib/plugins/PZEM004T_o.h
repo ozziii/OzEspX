@@ -38,10 +38,9 @@ class PZEM004T_o : public plugin_base, public plugin_sensor
             topic_energy = buildTopic(MQTT_SENSOR_ENERGY);
             topic_power = buildTopic(MQTT_SENSOR_POWER);
 
+            // [Hardware(0):Software(1)]
             if (atoi(config[3].c_str()))
             {
-#ifndef ESP32
-                
 #ifdef DEBUG
                 DEBUG_MSG_P(PSTR("[PZEM004T][%s] CREATE SOFTWARE SERIAL \n"), name.c_str());
 #endif
@@ -59,13 +58,6 @@ class PZEM004T_o : public plugin_base, public plugin_sensor
 #endif
                     return;
                 }
-#else
-#ifdef DEBUG
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s][ERROR] SERIAL NOT WORK ON ESP32 \n"), name.c_str());
-
-#endif
-                return;
-#endif
             }
             else
             {
@@ -75,7 +67,7 @@ class PZEM004T_o : public plugin_base, public plugin_sensor
                 device = new PZEM004T(_serial);
 
 #ifdef DEBUG
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s] USE SERIAL PORT %d \n"), name.c_str(), serial);
+                DEBUG_MSG_P(PSTR("[PZEM004T][%s] USE HARDWARE SERIAL PORT %d \n"), name.c_str(), serial);
 #endif
             }
 
@@ -116,33 +108,33 @@ class PZEM004T_o : public plugin_base, public plugin_sensor
     {
 
         float v = device->voltage(ip);
-        if (v < 0.0)
-            v = 0.0;
-        Serial.print(v);
-        Serial.print("V; ");
+        if (v > 0.0)
+        {
+            String temp_string(v);
+            Network.send(topic_voltage.c_str(),temp_string.c_str());
+        }
+
 
         float i = device->current(ip);
         if (i >= 0.0)
         {
-            Serial.print(i);
-            Serial.print("A; ");
+            String temp_string(i);
+            Network.send(topic_current.c_str(),temp_string.c_str());
         }
 
         float p = device->power(ip);
         if (p >= 0.0)
         {
-            Serial.print(p);
-            Serial.print("W; ");
+            String temp_string(p);
+            Network.send(topic_power.c_str(),temp_string.c_str());
         }
 
         float e = device->energy(ip);
         if (e >= 0.0)
         {
-            Serial.print(e);
-            Serial.print("Wh; ");
+            String temp_string(e);
+            Network.send(topic_energy.c_str(),temp_string.c_str());
         }
-
-        Serial.println();
     }
 
     static const char *ClassName() { return "PZEM004T"; }

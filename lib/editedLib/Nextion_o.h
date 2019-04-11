@@ -1,6 +1,6 @@
 #include "configuration.h" //TODO REMOVE
 
-#ifdef NEXTION
+#ifdef PLUGIN_NEXTION
 
 /*
 HMI Nextion Library

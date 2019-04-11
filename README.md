@@ -77,7 +77,7 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    * [delay]             Delay in second 
    * [pin]               It represent **GPIO number** of pin where device is connected
    
-   MQTT topic
+   MQTT send topic
    * **Topic:** (espname)/(plug-in name)/temperature  **Message:** Temperature value in form (xx,xx)
    * **Topic:** (espname)/(plug-in name)/humidity  **Message:** Humidity value in form (xx,xx)
 

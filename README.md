@@ -26,7 +26,6 @@ First at all very thanks to Xose Pérez for your public code Espurna (https://gi
 * Plug-In Configuration.
 
 ## Getting started
-* Download or clone conde in your PlatformIO
 * Download or clone code to your PlatformIO
 * Go to platformio.ini and select your board by un-comment (remove first ";" ) form env_default  line 
    ```ini
@@ -42,9 +41,10 @@ First at all very thanks to Xose Pérez for your public code Espurna (https://gi
  * In Your Bowser go to Esp's Ip address
  * Insert default user and password **admin** , **admin**
  * Edit Esp Parameter like **espname** , **User** , **Password** , **WIFI** parameter, **MQTT** parameter. When a paramenter has changed line become bold. When all parameter is ok you can update settings and reboot device.
- * Find your Esp's Ip address and connet.
+ * Find your Esp's Ip address in your local network and connet.
  * Configure Plug-in
- 
+ * After all configuratin is ok update settings and reboot device
+
          
 ## Plug-in
 Plug-in represent a new element added to ESP. It can be hardware or software. Some example:  sensors, buttons, led, display, bell ...
@@ -55,17 +55,17 @@ In bottom of web gui there are list of all current plug-in with her initializati
 Each parameter are separated by '/' character. The parameter that end with "]=X" are optional and X is default value. '1:0' stand for binary value 0 or 1 only ammited.
 
 
-* **BINARIY_SENSOR** you can connect with this plug-in a single pin sensor like button, motion sensor (HC-SR501) , Ir Barrier, ecc. this plug in work always in interrupt (on change) mode. If delay parameter is different by 0 it send periodicaly the pin state
+* **BINARIY_SENSOR** you can connect with this plug-in a single pin sensor like button, motion sensor (HC-SR501) , Ir Barrier, ecc. this plug in work always in interrupt (on change) mode. If delay parameter is different by 0 it send also periodicaly the pin state
    
    Initialization String [#]/[NAME]/[read pin]/[delay (s)]=0/[read logic 1:0]=1/[Pull up 1:0]=0
    * [#]                 Plug-in id
    * [NAME]              A simple name (es. Button1)
    * [read pin]          It represent **GPIO number** of pin where device is connected
    * [delay (s)]=0       Delay in second 
-   * [read logic 1:0]=1  1 => HIGT = TRUE and LOW = FALSE  // 0 => HIGT = FALSE and LOW = TRUE
+   * [read logic 1:0]=1  1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
    * [Pull up 1:0]=0     0 => NO PULL UP  // 1 => PULL UP
    
-   MQTT topic
+   MQTT send topic
    * **Topic:** (espname)/(plug-in name)/state  **Message:** "ON" or "OFF"  Send on interrupt and if delay is set each delay
    
    
@@ -73,7 +73,7 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
 
    Initialization String [#]/[NAME]/[delay]/[pin]
    * [#]                 Plug-in id
-   * [NAME]              A simple name (es. Button1)
+   * [NAME]              A simple name (es. dht_bedroom)
    * [delay]             Delay in second 
    * [pin]               It represent **GPIO number** of pin where device is connected
    
@@ -82,10 +82,54 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    * **Topic:** (espname)/(plug-in name)/humidity  **Message:** Humidity value in form (xx,xx)
 
 
+* **PZEM004T** (AC current / power) this plug-in read voltage, current, power and energy from a PZEM004T sensor easch [delay] second 
+   
+   Initialization String [#]/[NAME]/[delay]/[Hardware(0):Software(1)]/[Serial or Tx pin]=2/[Rx pin]=0
+   * [#]                         Plug-in id
+   * [NAME]                      A simple name (es. dht_bedroom)
+   * [delay]                     Delay in second 
+   * [Hardware(0):Software(1)]   O: use Hrdware serial connection 1: Use Software connection
+   * [Serial or Tx pin]=2        If Hardware serial set number. If Software serial set Tx **GPIO number** 
+   * [Rx pin]=0                  If Software serial set Rx **GPIO number**
+   
+   MQTT send topic
+   * **Topic:** (espname)/(plug-in name)/current  **Message:** Current value in form (xx,xx)
+   * **Topic:** (espname)/(plug-in name)/voltage  **Message:** Voltage value in form (xx,xx)
+   * **Topic:** (espname)/(plug-in name)/power  **Message:** Istant Power value in form (xx,xx)
+   * **Topic:** (espname)/(plug-in name)/energy  **Message:** Energy per hour value in form (xx,xx)
 
-* Generic Bistable Relay
-* JSN-SR047-V2 (distance)
-* PZEM004T (AC current / power)
-* PWM LED White and RGB 
 
+* **SWITCH_PIN_STATE** this plugin  provide to control for a switch by an action pin and an read pin for reading state value. read pin work with in interrupt mode (on change). If [delay] is set, plug-in send state also each [delay] second 
+   
+   Initialization String [#]/[NAME]/[action pin]/[read pin]/[delay]=0/[action logic 1:0]=1/[read logic 1:0]=1/[start action pin 1:0]=0/[Pull up 1:0]=0
+   * [#]                         Plug-in id
+   * [NAME]                      A simple name (es. dht_bedroom)
+   * [delay]                     Delay in second 
+   * [action logic 1:0]=1        1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
+   * [read logic 1:0]=1          1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
+   * [start action pin 1:0]=0    begin value of action pin 1 = HIGH , 0 = LOW 
+   * [Pull up 1:0]=0             read pin pull up mode 0 => NO PULL UP  // 1 => PULL UP
+   
+   MQTT send topic
+   * **Topic:** (espname)/(plug-in name)/state  **Message:** "ON" or "OFF"  
+  
+   MQTT recive topic
+   * **Topic:** (espname)/(plug-in name)/action  **Message:** "ON" or "OFF"
+   
 
+* **BISTABLE_RELAY** this plugin  provide to control for a bistable relay by an action pin that send impulse for rele switch and an read pin for reading state value. read pin work with in interrupt mode (on change). If [delay] is set, plug-in send state also each [delay] second 
+   
+   Initialization String [#]/[NAME]/[action pin]/[read pin]/[delay]=0/[action logic 1:0]=1/[read logic 1:0]=1/[start action pin 1:0]=0/[Pull up 1:0]=0
+   * [#]                         Plug-in id
+   * [NAME]                      A simple name (es. dht_bedroom)
+   * [delay]                     Delay in second 
+   * [action logic 1:0]=1        NO USEFULL SET IT 1 
+   * [read logic 1:0]=1          1 => HIGH = TRUE and LOW = FALSE  // 0 => HIGH = FALSE and LOW = TRUE
+   * [start action pin 1:0]=0    begin value of action pin 1 = HIGH , 0 = LOW 
+   * [Pull up 1:0]=0             read pin pull up mode 0 => NO PULL UP  // 1 => PULL UP
+   
+   MQTT send topic
+   * **Topic:** (espname)/(plug-in name)/state  **Message:** "ON" or "OFF"  
+  
+   MQTT recive topic
+   * **Topic:** (espname)/(plug-in name)/action  **Message:** "ON" or "OFF"

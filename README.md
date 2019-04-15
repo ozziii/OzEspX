@@ -169,3 +169,4 @@ Each parameter are separated by '/' character. The parameter that end with "]=X"
    
    Initialization String [#]/[NAME]/[sensor pin]/[switch pin]/[relay logic 1:0]/[valid key]
   
+* **MORE PLUG-IN COMING SOON....**

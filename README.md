@@ -38,7 +38,7 @@ First at all very thanks to Xose Pérez for your public code Espurna (https://gi
  * Compile and Upload 
  * Wait for Esp boot
  * Connect at new WIFI network SSID: "**ESPWIFI**" password: "**ESPWIFIESPWIFIESPWIFI**"  (You can change it in configuration.h)
- * In Your Bowser go to Esp's Ip address
+ * In Your Bowser go to http://192.168.4.1
  * Insert default user and password **admin** , **admin**
  * Edit Esp Parameter like **espname** , **User** , **Password** , **WIFI** parameter, **MQTT** parameter. When a paramenter has changed line become bold. When all parameter is ok you can update settings and reboot device.
  * Find your Esp's Ip address in your local network and connet.

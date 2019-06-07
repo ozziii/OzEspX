@@ -3,7 +3,22 @@
 
 #include <Arduino.h>
 
-#define MAX_PLUGIN 12
+
+/*===========================================================================
+* ============================= DATABASE CONFIGURATION ========================
+* ===========================================================================*/
+
+#define EEPROM_BEGIN_INDEX 5
+#define STABILITY_INDEX 0
+#define START_COUNT_INDEX 1
+#define DB_VERSION_INDEX 2
+
+
+
+
+#define DB_VERSION 5
+
+#define MAX_PLUGIN 10
 
 struct Parameter
 {

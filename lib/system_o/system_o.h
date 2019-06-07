@@ -30,9 +30,9 @@ class system_o
 
     void begin()
     {
-        uint8_t start_time = EEPROM.read(START_TIME); 
+        uint8_t start_time = EEPROM.read(START_COUNT_INDEX); 
         start_time++;
-        EEPROM.write(START_TIME,start_time);
+        EEPROM.write(START_COUNT_INDEX,start_time);
         EEPROM.commit(); 
 
         //analogWriteFreq(100);

@@ -9,9 +9,9 @@
 
 // #define PZEM004_NO_SWSERIAL
 
-#if (not defined(PZEM004_NO_SWSERIAL)) && (defined(__AVR__) || defined(ESP8266))
+//#if (not defined(PZEM004_NO_SWSERIAL)) && (defined(__AVR__) || defined(ESP8266))
 #define PZEM004_SOFTSERIAL
-#endif
+//#endif
 
 #if defined(PZEM004_SOFTSERIAL)
 #include <SoftwareSerial.h>

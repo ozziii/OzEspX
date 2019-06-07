@@ -88,8 +88,9 @@ bool SettingClass::Update(String key, String value)
 void SettingClass::RestoreDefault()
 {
     EEPROM.write(STABILITY_INDEX, 0);
-    EEPROM.write(START_TIME, 0);
-
+    EEPROM.write(START_COUNT_INDEX, 0);
+    EEPROM.write(DB_VERSION_INDEX, DB_VERSION);
+    
     uint16_t index = EEPROM_BEGIN_INDEX;
 
     for (int i = 0; i < Parameters_Size; i++)
@@ -111,8 +112,7 @@ void SettingClass::InitSettings()
 
     if(DB_VERSION != db_version)
     {
-        EEPROM.write(DB_VERSION_INDEX, DB_VERSION);
-        RestoreDefault();
+        //RestoreDefault();
     } 
 }
 

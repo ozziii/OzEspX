@@ -13,7 +13,7 @@ var toUpdate = [];
 
 
 
-function Initpage(){
+function Initpage() {
     $.getJSON(inti_url, function (data) {
         $('#Parameters').html(Mustache.render($('#head-template').html(), data));
         $('#PlugIns').html(Mustache.render($('#plugin-template').html(), data));
@@ -22,10 +22,9 @@ function Initpage(){
 
         for (var i = 0; i < parameters.length; i++) {
             if (parameters[i].key === 'Stabile') {
-              if(!parameters[i].value)
-              {
-                $("#unlock_button").show();
-              }
+                if (!parameters[i].value) {
+                    $("#unlock_button").show();
+                }
             }
         }
     })
@@ -34,13 +33,13 @@ function Initpage(){
 
 function UpdatePage() {
     toUpdate = [];
-    
+
     $.getJSON(config_url, function (data) {
         $('#table_setting').html(Mustache.render($('#entry-template').html(), data));
     });
 }
 
-function valueChange(key){
+function valueChange(key) {
     var value = $("#value_" + key);
     value.addClass("value_changed");
 
@@ -48,7 +47,7 @@ function valueChange(key){
     restoreButton.show();
 
     var present = toUpdate.indexOf(key);
-    if(present < 0 ) toUpdate.push(key);
+    if (present < 0) toUpdate.push(key);
 };
 
 
@@ -69,38 +68,36 @@ function Submit() {
 
     var parameters = "";
 
-    if(toUpdate.length == 0)
-    {
+    if (toUpdate.length == 0) {
         $.alert({
             title: 'Attensione!',
             content: 'NESSUN PARAMETRO MODIFICATO! ',
             theme: 'supervan'
         });
-        return; 
+        return;
     }
 
-    for(var i = 0 ; i < toUpdate.length ; i++)
-    {
+    for (var i = 0; i < toUpdate.length; i++) {
         var size = $("#size_" + toUpdate[i]).val();
         var value = $("#value_" + toUpdate[i]).val();
         if (value.length > size) {
             $.alert({
                 title: 'Attensione!',
-                content: 'Dimensione massima superata! per il parametro '  + toUpdate[i]
-                +' <br> Dimensione massima: ' + size + ' <br> lunghezza: ' + value.length,
+                content: 'Dimensione massima superata! per il parametro ' + toUpdate[i]
+                    + ' <br> Dimensione massima: ' + size + ' <br> lunghezza: ' + value.length,
                 theme: 'supervan'
             });
             return;
         }
 
-        parameters += toUpdate[i] +", ";
+        parameters += toUpdate[i] + ", ";
     }
 
-    
+
 
     $.confirm({
         title: 'Modifica parametri!',
-        content: 'Sei sicuro di voler modificare i parametri:  '+parameters+' ? ',
+        content: 'Sei sicuro di voler modificare i parametri:  ' + parameters + ' ? ',
         theme: 'supervan',
         buttons: {
             confirm: function () {
@@ -108,31 +105,30 @@ function Submit() {
 
                 //$("#updateResult").val($("#updateResult").val() + );
 
-                for(var i = 0 ; i < toUpdate.length ; i++)
-                {
+                for (var i = 0; i < toUpdate.length; i++) {
                     var key = toUpdate[i];
                     var value = $("#value_" + key).val();
 
-                    value = value.replace(/&/g, "$"); 
+                    value = value.replace(/&/g, "$");
 
                     $.ajax({
                         url: edit_config_url + "?name=" + key + "&val=" + value,
                         dataType: 'json',
                         async: false,
-                        success: function(data) {
-                            if (data.result == "W") 
-                                $("#updateResult").val($("#updateResult").val() + "ATTENZIONE! PARAMETRO "+key+" INESITENTE <br>" );
+                        success: function (data) {
+                            if (data.result == "W")
+                                $("#updateResult").val($("#updateResult").val() + "ATTENZIONE! PARAMETRO " + key + " INESITENTE <br>");
                             if (data.result == "E")
-                                $("#updateResult").val($("#updateResult").val() + "ATTENZIONE! ERRORE INTERNO DURANTE L'AGGIORNAMENTO DEL PARAMTERO "+key+". <br>");
+                                $("#updateResult").val($("#updateResult").val() + "ATTENZIONE! ERRORE INTERNO DURANTE L'AGGIORNAMENTO DEL PARAMTERO " + key + ". <br>");
                             if (data.result == "O")
-                                $("#updateResult").val($("#updateResult").val() + "PARAMETRO "+key+" AGGIORNATO CORRETTAMENTE <br>");
+                                $("#updateResult").val($("#updateResult").val() + "PARAMETRO " + key + " AGGIORNATO CORRETTAMENTE <br>");
                         }
-                      });
+                    });
                 }
 
                 $.alert({
                     title: 'AGGIORNAMENTO EFFETTUATO',
-                    content: "L'AGGIORNAMENTO DEI PARAMETRI E' STATO EFFETTUATO CON I SEGUENTI RISULTATI <br> "+ $("#updateResult").val() ,
+                    content: "L'AGGIORNAMENTO DEI PARAMETRI E' STATO EFFETTUATO CON I SEGUENTI RISULTATI <br> " + $("#updateResult").val(),
                     theme: 'supervan'
                 });
 
@@ -144,7 +140,7 @@ function Submit() {
         }
     });
 
-    
+
 
 }
 
@@ -235,8 +231,8 @@ function Unlock() {
                     url: unlock_config_url + "?val=0",
                     dataType: 'json',
                     async: false,
-                    success: function(data) {
-                        if (data.result == "W") 
+                    success: function (data) {
+                        if (data.result == "W")
                             $.alert({
                                 title: 'ERRORE',
                                 content: "PARAMETRO ERRATO",
@@ -248,14 +244,13 @@ function Unlock() {
                                 content: "ERRORE INTERNO DEL SERVER",
                                 theme: 'supervan'
                             });
-                        if (data.result == "O")
-                        {
+                        if (data.result == "O") {
                             $.alert({
                                 title: 'SBLOCCO EFFETTUATO',
                                 content: "SISTEMA DEFINITO STABILE DALL' UTENTE <br> SI CONSIGLIA DI RIAVVIARE ",
                                 theme: 'supervan'
-                            }); 
-                            Initpage(); 
+                            });
+                            Initpage();
                         }
                     }
                 });
@@ -267,7 +262,70 @@ function Unlock() {
 }
 
 
+function SendMQTT() {
 
+    var topic_text_obj = $("#mqtt_topic_text");
+    var payload_text_obj = $("mqtt_payload_text");
+
+    var topic = topic_text_obj.val();
+    var message = payload_text_obj.val();
+
+    if (!topic || 0 === topic.length) {
+        $.alert({
+            title: 'Send MQTT message',
+            content: "ERROR: Topic IS NULL!!",
+            theme: 'supervan'
+        });
+    }
+
+    if (!message || 0 === message.length) {
+        $.alert({
+            title: 'Send MQTT message',
+            content: "ERROR: Payload IS NULL!!",
+            theme: 'supervan'
+        });
+    }
+
+
+    $.confirm({
+        title: 'Send MQTT message',
+        content: 'Send Topic: ( ' + topic + ' ) with payload: ( ' + topic + ' ) ? ',
+        theme: 'supervan',
+        buttons: {
+            confirm: function () {
+                $.ajax({
+                    url: unlock_config_url + "?val=0", ///EDOT
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        if (data.result == "W")
+                            $.alert({
+                                title: 'ERRORE',
+                                content: "PARAMETRO ERRATO",
+                                theme: 'supervan'
+                            });
+                        if (data.result == "E")
+                            $.alert({
+                                title: 'ERRORE',
+                                content: "ERRORE INTERNO DEL SERVER",
+                                theme: 'supervan'
+                            });
+                        if (data.result == "O") {
+                            $.alert({
+                                title: '',
+                                content: "",
+                                theme: 'supervan'
+                            });
+                            Initpage();
+                        }
+                    }
+                });
+            },
+            cancel: function () {
+            },
+        }
+    });
+}
 
 $(function () {
     Initpage();
@@ -278,6 +336,6 @@ $(function () {
     $("#restart_button").on('click', Restart);
     $("#submit_button").on('click', Submit);
     $("#unlock_button").on('click', Unlock);
-    
-    
+    $("#mqtt_send_button").on('click', SendMQTT);
+
 });

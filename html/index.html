@@ -47,9 +47,17 @@
             <table id="table_setting">
             </table>
         </div>
+        <div class="body_mqtt">
+            <div >
+                SEND MQTT: Topic: 
+                <input id="mqtt_topic_text" type="text">  
+                payload:  
+                <input id="mqtt_payload_text" type="text"> 
+                <input type="button" title="Send" id="mqtt_send_button" > 
+            </div>
+        </div>
         <div class="foot">
             <div id="PlugIns" class="body_plugin">
-
             </div>
         </div>
 </body>
@@ -79,6 +87,8 @@
         </tr>
     {{/setting}}
 </script>
+
+
 
 <script id="head-template" type="text/x-handlebars-template">
     {{#parameters}}

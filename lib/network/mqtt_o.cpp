@@ -137,6 +137,16 @@ void mqtt_o::_mqttConnect()
     }
 
     String host = SETTING_P(PSTR("MQTTSIP"));
+
+    if (host.length() == 0)
+    {
+#ifdef DEBUG
+        DEBUG_MSG_P(PSTR("[MQTT] No Ip Set \n"));
+
+#endif
+        return;
+    }
+
     uint16_t port = SETTING_P_I(PSTR("MQTTPORT"));
     String _mqtt_user = SETTING_P(PSTR("MQTTUSER"));
     String _mqtt_pass = SETTING_P(PSTR("MQTTPASS"));
@@ -178,12 +188,12 @@ void mqtt_o::_mqttConnect()
 #endif
 
         //               connect(const char *id, const char *user, const char *pass, const char* willTopic, uint8_t willQos, boolean willRetain, const char* willMessage)
-        response = _mqtt.connect(_mqtt_clientid.c_str(), _mqtt_user.c_str(), _mqtt_pass.c_str(),_availability_topic().c_str(),MQTT_QoS,MQTT_RETAIN,MQTT_WILL);
+        response = _mqtt.connect(_mqtt_clientid.c_str(), _mqtt_user.c_str(), _mqtt_pass.c_str(), _availability_topic().c_str(), MQTT_QoS, MQTT_RETAIN, MQTT_WILL);
     }
     else
     {
         //boolean PubSubClient::connect(const char *id, const char* willTopic, uint8_t willQos, boolean willRetain, const char* willMessage)
-        response = _mqtt.connect(_mqtt_clientid.c_str(),_availability_topic().c_str(),MQTT_QoS,MQTT_RETAIN,MQTT_WILL);
+        response = _mqtt.connect(_mqtt_clientid.c_str(), _availability_topic().c_str(), MQTT_QoS, MQTT_RETAIN, MQTT_WILL);
     }
 
     if (response)
@@ -205,6 +215,19 @@ void mqtt_o::_mqttOnDisconnect()
 #ifdef DEBUG
     DEBUG_MSG_P(PSTR("[MQTT] Disconnected!\n"));
 #endif
+
+    //  Try To solve problem
+    //  [E][WiFiClient.cpp:74] connect(): lwip_connect_r: 113
+    //
+    //  Code is fine, error 113 is ECONNABORTED (Connection aborted). 
+    //  Try flushing the client or reading all available data. 
+    //  client.readStringUntil('\r'); does not read it all
+
+    //_mqtt_client.readStringUntil('\r');
+    _mqtt_client.flush();
+
+    // END try
+
 }
 
 void mqtt_o::_mqttOnConnect()
@@ -220,7 +243,7 @@ void mqtt_o::_mqttOnConnect()
         _mqttSubscribe(_mqtt_topics[i]);
     }
 
-    mqttPublish(_availability_topic().c_str(),MQTT_PAYLOAD_AVAILABLE);
+    mqttPublish(_availability_topic().c_str(), MQTT_PAYLOAD_AVAILABLE);
 }
 
 void mqtt_o::_mqttSubscribe(const char *topic)

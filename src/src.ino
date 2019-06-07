@@ -30,6 +30,7 @@ void setup()
     debug::debugBegin();
 #endif
 
+
     // Initialize EEPROM setting string
     Setting.begin();
 

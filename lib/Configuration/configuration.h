@@ -13,13 +13,13 @@
 #define DEVICE_NAME "ESP8622 LoLin NodeMcu V3"
 #endif
 
-#define SW_VERSION "0.5.2 rc"
+#define SW_VERSION "0.5.3 rc"
 
 /*===========================================================================
 * ============================= DEBUG CONFIGURATION =========================
 * ===========================================================================*/
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 
@@ -64,18 +64,6 @@
 
 
 /*===========================================================================
-* ============================= DATABASE CONFIGURATION ========================
-* ===========================================================================*/
-
-#define EEPROM_BEGIN_INDEX 5
-
-#define STABILITY_INDEX 0
-#define START_TIME 1
-#define DB_VERSION_INDEX 2
-
-#define DB_VERSION 5
-
-/*===========================================================================
 * ============================= WIFI CONFIGURATION ==========================
 * ===========================================================================*/
 
@@ -83,6 +71,10 @@
 
 #define WIFI_AP_SSID "ESPWIFI"
 #define WIFI_AP_PASS "ESPWIFIESPWIFIESPWIFI"
+
+
+// Set Wifi Power to max
+#define MAX_POWER_WIFI
 
 /*===========================================================================
 * ============================= MQTT CONFIGURATION ==========================
@@ -110,6 +102,10 @@
 #define MQTT_SENSOR_ENERGY "energy"
 #define MQTT_SENSOR_VALUE "value"
 #define MQTT_SENSOR_ALIVE "alive"
+
+#define TOPIC_BRIGHTNESS "brightness"
+#define TOPIC_RGB "rgb"
+
 
 // Availability ( LAST WILL )
 #define MQTT_AVAILABLE_TOPIC        "available"
@@ -215,7 +211,7 @@
 
 //#define PLUGIN_RADIOFREQUENCY_REVICER
 //#define PLUGIN_JSNSR04TV2
-#define PLUGIN_PZEM004T
+//#define PLUGIN_PZEM004T
 #define PLUGIN_NEXTION
 
 /*===========================================================================

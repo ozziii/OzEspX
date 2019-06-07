@@ -55,7 +55,7 @@ class plugins_o
 
     static html_plugin get(uint8_t index);
 
-    static uint8_t size();
+    static uint8_t plugin_list_size();
 };
 
 #endif

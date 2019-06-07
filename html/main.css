@@ -101,6 +101,11 @@ body{
     padding: 10px;
 }
 
+.body_mqtt{
+    display: block;
+    margin: auto;
+    padding: 10px;
+}
 
 #table_setting{
     margin: auto;

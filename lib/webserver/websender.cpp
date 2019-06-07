@@ -57,7 +57,7 @@ void WebSender::homeJson(AsyncWebServerRequest *request)
 
     JsonObject &param06 = jsonBuffer.createObject();
     param06["key"] = "Start Time";
-    param06["value"] = EEPROM.read(START_TIME);
+    param06["value"] = EEPROM.read(START_COUNT_INDEX);
     params.add(param06);
 
 #ifdef ESP32
@@ -67,9 +67,14 @@ void WebSender::homeJson(AsyncWebServerRequest *request)
     params.add(param07);
 #endif
 
+    JsonObject &param08 = jsonBuffer.createObject();
+    param08["key"] = "Db version";
+    param08["value"] = EEPROM.read(DB_VERSION_INDEX);
+    params.add(param08);
+
     JsonArray &Jplugins = root.createNestedArray("plugin");
 
-    for (int i = 0; i < plugins_o::size(); i++)
+    for (int i = 0; i < plugins_o::plugin_list_size(); i++)
     {
         html_plugin plug = plugins_o::get(i);
 

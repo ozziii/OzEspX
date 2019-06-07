@@ -60,7 +60,7 @@ void plugins_o::createPlugIn(
 
     uint8_t key = atoi(initString.substring(0, index).c_str());
 
-    if (key >= size())
+    if (key >= plugin_list_size())
         return;
 
     const char *name = Get_CONFIG_P(&plugin_list[key]).name;
@@ -235,7 +235,7 @@ html_plugin plugins_o::get(uint8_t index)
 #endif
 }
 
-uint8_t plugins_o::size()
+uint8_t plugins_o::plugin_list_size()
 {
     return Size_P(plugin_list);
 }

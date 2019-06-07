@@ -13,8 +13,6 @@
 *********************************************************************************************************************************************/
 
 #define PIN_SEPARATOR_CHAR '-'
-#define TOPIC_BRIGHTNESS "brightness"
-#define TOPIC_RGB "rgb"
 
 class led_plugin : public plugin_base, public plugin_response
 {
@@ -86,20 +84,20 @@ class led_plugin : public plugin_base, public plugin_response
                 onoff_pin_logic = atoi(config[7].c_str());
             }
 
-            topic_action = buildTopic(MQTT_COMMAND_ACTION);
-            topic_brightness_action = buildTopic(stringjoin(TOPIC_BRIGHTNESS, MQTT_COMMAND_ACTION));
-            topic_rgb_action = buildTopic(stringjoin(TOPIC_RGB, MQTT_COMMAND_ACTION));
+            topic_action = this->buildTopic(MQTT_COMMAND_ACTION);
+            topic_brightness_action = this->buildTopic(stringjoin(TOPIC_BRIGHTNESS, MQTT_COMMAND_ACTION));
+            topic_rgb_action = this->buildTopic(stringjoin(TOPIC_RGB, MQTT_COMMAND_ACTION));
 
             Network.subscribe(topic_action.c_str());
             Network.subscribe(topic_brightness_action.c_str());
             Network.subscribe(topic_rgb_action.c_str());
 
-            topic_state = buildTopic(MQTT_COMMAND_STATE);
-            topic_brightness_state = buildTopic(stringjoin(TOPIC_BRIGHTNESS, MQTT_COMMAND_STATE));
-            topic_rgb_state = buildTopic(stringjoin(TOPIC_RGB, MQTT_COMMAND_STATE));
+            topic_state = this->buildTopic(MQTT_COMMAND_STATE);
+            topic_brightness_state = this->buildTopic(stringjoin(TOPIC_BRIGHTNESS, MQTT_COMMAND_STATE));
+            topic_rgb_state = this->buildTopic(stringjoin(TOPIC_RGB, MQTT_COMMAND_STATE));
 
             IsOn = true;
-            brightness = 80;
+            brightness = 0;
             red = 255;
             green = 255;
             blue = 255;
@@ -135,12 +133,11 @@ class led_plugin : public plugin_base, public plugin_response
                 int temp_brightness = Message.toInt();
 
                 brightness = constrain(temp_brightness, 0, 100);
-                update_lamp();
-                publish_brightness();
-                //publish_rgb();
+                this->update_lamp();
+                this->publish_brightness();
             }
             else
-                publish_state();
+                this->publish_state();
 
             return true;
         }
@@ -155,12 +152,12 @@ class led_plugin : public plugin_base, public plugin_response
                     red = constrain(rgb[0].toInt(), 0, 255);
                     green = constrain(rgb[1].toInt(), 0, 255);
                     blue = constrain(rgb[2].toInt(), 0, 255);
-                    update_lamp();
-                    publish_rgb();
+                    this->update_lamp();
+                    this->publish_rgb();
                 }
             }
             else
-                publish_state();
+                this->publish_state();
 
             return true;
         }
@@ -168,12 +165,12 @@ class led_plugin : public plugin_base, public plugin_response
         if (topic.equals(topic_action))
         {
             if (Message.equals(MQTT_STATE_ON) && !IsOn)
-                turnLamp(true);
+                this->turnLamp(true);
 
             if (Message.equals(MQTT_STATE_OFF) && IsOn)
-                turnLamp(false);
+                this->turnLamp(false);
 
-            publish_state();
+            this->publish_state();
             return true;
         }
 
@@ -222,6 +219,7 @@ class led_plugin : public plugin_base, public plugin_response
             // TURN ON LAMP
             if (onoff_pin >= 0)
                 pins::writeDigital(onoff_pin, onoff_pin_logic);
+
             update_lamp();
         }
         else

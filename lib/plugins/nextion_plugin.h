@@ -56,7 +56,7 @@ public:
 
       initialized = true;
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
       DEBUG_MSG_P(PSTR("[NEXTION][%s] IS INITIALZED DELAY %d ms \n"), name.c_str(), sensor_delay);
 #endif
 
@@ -83,7 +83,7 @@ public:
           sprintf(command, GuiFiller[i].command, Message.c_str());
           myNextion->sendCommand(command);
 
-#ifdef DEBUG
+#ifdef DEBUG_INFO
           DEBUG_MSG_P(PSTR("[NEXTION][%s] Arrive MQTT (%s) message (%s) \n"), name.c_str(), GuiFiller[i].topic, Message.c_str());
           DEBUG_MSG_P(PSTR("[NEXTION][%s] Send command (%s) \n"), name.c_str(), command);
 #endif
@@ -104,7 +104,7 @@ public:
     String command = myNextion->listen();
     if (command.length() > 0)
     {
-#ifdef DEBUG
+#ifdef DEBUG_INFO
       DEBUG_MSG_P(PSTR("[NEXTION][%s] incoming command (%s) \n"), name.c_str(), command.c_str());
 #endif
       for (int i = 0; i < Size_P(GuiCommand); i++)
@@ -112,7 +112,7 @@ public:
         if (command.equals(GuiCommand[i].command))
         {
           Network.send(GuiCommand[i].topic, GuiCommand[i].message);
-#ifdef DEBUG
+#ifdef DEBUG_INFO
           DEBUG_MSG_P(PSTR("[NEXTION][%s] incoming command (%s) \n"), name.c_str(), command.c_str());
           DEBUG_MSG_P(PSTR("[NEXTION][%s] Send MQTT topic (%s) message (%s) \n"), name.c_str(), GuiCommand[i].topic, GuiCommand[i].message);
 #endif

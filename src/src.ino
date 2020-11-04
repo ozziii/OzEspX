@@ -1,5 +1,15 @@
 #include <Arduino.h>
 
+/* Platformio lib finde problem
+  Include for I2C and SPI protocol  */
+#include <Wire.h>
+#include <SPI.h>
+
+#ifdef ESP32
+#include "driver/i2s.h"
+#endif
+
+/* Ozesp deps */
 #include <configuration.h>
 #include <system_o.h>
 #include <network.h>
@@ -13,59 +23,63 @@ static executor Program;
 ticker_o web_tiker;
 void web_callback()
 {
-    WebServer.begin(callback);
+  WebServer.begin(callback);
 }
 #endif
 
+/* MQTT message callback */
 void callback(char *p_topic, char *p_payload, size_t p_length)
 {
-    char message[p_length + 1];
-    strlcpy(message, (char *)p_payload, p_length + 1);
-    Program.mqttrecive(p_topic, message);
+  char message[p_length + 1];
+  strlcpy(message, (char *)p_payload, p_length + 1);
+  Program.mqttrecive(p_topic, message);
 }
 
+/* Setting Up */
 void setup()
 {
+
 #ifdef DEBUG
-    debug::debugBegin();
+  debug::debugBegin();
 #endif
 
-
-    // Initialize EEPROM setting string
-    Setting.begin();
+  // Initialize EEPROM setting string
+  Setting.begin();
 
 #ifdef FORCE_INIT_SETTING
-    Setting.RestoreDefault();
+  Setting.RestoreDefault();
 #else
-    Setting.InitSettings();
+  Setting.InitSettings();
 #endif
 
-    System.begin();
+  System.begin();
 
-    if (System.checkSystemStability())
-    {
-        // Initialize plug-in and start execution
-        Program.begin();
-    }
+  if (System.checkSystemStability())
+  {
+    // Initialize plug-in and start execution
+    Program.begin();
+  }
 
-    // Connect to WiFi and MQTT server
-    Network.begin(callback);
+  // Connect to WiFi and MQTT server
+  Network.begin(callback);
 
 
-    // Initialize WebServer
+  // Initialize WebServer
 #ifdef ESP32 // IF ESP32 Delay server start
-    web_tiker.once(WEBSERVER_START_DELAY, web_callback);
+  web_tiker.once(WEBSERVER_START_DELAY, web_callback);
 #else
-    WebServer.begin(callback);
+  WebServer.begin(callback);
 #endif
-              
-    
+
+
 }
 
+/* main Program */
 void loop()
 {
-    Network.loop();
-    Program.loop();
-    // Power consumation delay
-    System.loop();
+  Network.loop();
+  Program.loop();
+
+  // Power consumation delay
+  System.loop();
 }

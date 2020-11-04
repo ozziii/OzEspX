@@ -34,14 +34,14 @@ public:
 
       initialized = true;
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
       DEBUG_MSG_P(PSTR("[DDNS][%s] IS INITIALZED \n"), name.c_str());
       DEBUG_MSG_P(PSTR("[DDNS][%s] URL: %s \n"), name.c_str(), url.c_str());
 #endif
     }
     else
     {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
       DEBUG_MSG_P(PSTR("[DDNS][%s][ERROR] WRONG INITIALZE STRING OR NO DDNS URL \n"), name.c_str());
 #endif
     }
@@ -59,7 +59,7 @@ public:
       if (httpCode > 0)
       {
         String payload = http.getString();
-#ifdef DEBUG
+#ifdef DEBUG_INFO
         DEBUG_MSG_P(PSTR("[DDNS][%s] Request result: %s \n"), name.c_str(), payload.c_str());
 #endif
       }

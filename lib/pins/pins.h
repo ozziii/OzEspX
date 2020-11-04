@@ -6,6 +6,7 @@
 
 #include <configuration.h>
 #include <ticker_o.h>
+#include <debug_o.h>
 
 //Pins mode
 #define INPUT_MODE 0x01
@@ -30,7 +31,7 @@ struct pwm_pair
 };
 
 static std::vector<pwm_pair> pwm_list;
-static uint8_t next_channel = 1;
+static uint8_t next_channel = 0;
 
 #else
 static ticker_o relasePins[MAX_GPIO_NUMBER];
@@ -38,20 +39,26 @@ static ticker_o relasePins[MAX_GPIO_NUMBER];
 
 class pins
 {
-  public:
+public:
     static void setMode(uint8_t GPIO, uint8_t mode)
     {
 #ifdef ESP32
-        if (mode == PWM_MODE && next_channel < PWM_MAX_CHANNEL)
+        if (mode == PWM_MODE)
         {
-            ledcSetup(next_channel, PWM_FREQUENCY, PWM_RESOLUTION);
-            ledcAttachPin(convertPin(GPIO), next_channel);
-            pwm_pair new_pair = {next_channel, GPIO};
-            pwm_list.push_back(new_pair);
-            next_channel++;
+            if (next_channel < PWM_MAX_CHANNEL)
+            {
+                ledcSetup(next_channel, PWM_FREQUENCY, PWM_RESOLUTION);
+                ledcAttachPin(convertPin(GPIO), next_channel);
+                pwm_pair new_pair = {next_channel, GPIO};
+                pwm_list.push_back(new_pair);
+                next_channel++;
+            }
         }
-#endif
+        else
+            pinMode(convertPin(GPIO), convertMode(mode));
+#else
         pinMode(convertPin(GPIO), convertMode(mode));
+#endif
     }
 
     static int readDigital(uint8_t GPIO)
@@ -78,7 +85,7 @@ class pins
         }
 
         switcDigital(GPIO);
-        
+
 #ifdef ESP32
         ticker_o relasePins;
         relasePins.once_ms(delay_value, RelasePump, GPIO);
@@ -99,21 +106,20 @@ class pins
 
     static void PWM(uint8_t GPIO, uint16_t value)
     {
-        if (value >= 0 && value <= 1024)
-        {
+        if (value > 1024)
+            value = 1024;
+
 #ifdef ESP32
-            for (int i = 0; i < next_channel; i++)
+        for (int i = 0; i < next_channel; i++)
+        {
+            if (pwm_list[i].pin == GPIO)
             {
-                if (pwm_list[i].pin == GPIO)
-                {
-                    ledcWrite(pwm_list[i].channel, value);
-                    return;
-                }
+                ledcWrite(pwm_list[i].channel, value);
             }
-#else
-            analogWrite(convertPin(GPIO), value);
-#endif
         }
+#else
+        analogWrite(convertPin(GPIO), value);
+#endif
     }
 
     uint8_t static convertPin(uint8_t pin)
@@ -222,7 +228,7 @@ class pins
         return 0;
     }
 
-  private:
+private:
     static void RelasePump(uint8_t GPIO)
     {
         switcDigital(GPIO);

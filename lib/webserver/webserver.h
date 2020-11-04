@@ -12,6 +12,10 @@
 #include <network.h>
 #include <websender.h>
 
+#ifdef OTA
+#include "webOta.h"
+#endif
+
 static AsyncWebServer *_server;
 
 static OnWebMqttCallback _Web_callback;
@@ -92,8 +96,12 @@ static void _onInitDb(AsyncWebServerRequest *request)
     request->send(response);
 }
 
+static ticker_o web_reboot_tiker;
+void static web_reboot_tiker_task(){ ESP.restart(); }
+
 static void _onReset(AsyncWebServerRequest *request)
 {
+
 #ifdef WEB_SECURE
     if (!webAuthenticate(request))
     {
@@ -101,8 +109,7 @@ static void _onReset(AsyncWebServerRequest *request)
     }
 #endif
     request->send(404);
-
-    ESP.restart();
+    web_reboot_tiker.once(2,web_reboot_tiker_task);
 }
 
 static void _onUnlock(AsyncWebServerRequest *request)
@@ -126,12 +133,62 @@ static void _onMqtt(AsyncWebServerRequest *request)
     }
 #endif
     WebSender sender;
-    sender.execute_mqtt(request,_Web_callback);
+    sender.execute_mqtt(request, _Web_callback);
 }
+
+#ifdef OTA // OTA UPDATE COMMAND
+static void _onOTA_GET(AsyncWebServerRequest *request)
+{
+#ifdef WEB_SECURE
+    if (!webAuthenticate(request))
+    {
+        return request->requestAuthentication(SETTING("espname").c_str());
+    }
+#endif
+    WebOtaGet(request);
+}
+
+static void _onOTA_POST_END(AsyncWebServerRequest *request)
+{
+#ifdef WEB_SECURE
+    if (!webAuthenticate(request))
+    {
+        return request->requestAuthentication(SETTING("espname").c_str());
+    }
+#endif
+    WebOtaUploadEnd(request);
+}
+
+static void _onOTA_POST(AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final)
+{
+#ifdef WEB_SECURE
+    if (!webAuthenticate(request))
+    {
+        return request->requestAuthentication(SETTING("espname").c_str());
+    }
+#endif
+    WebOtaUpload(request,filename, index,data,len,final);
+}
+#endif
+
+#ifdef DEBUG_WEB_SUPPORT
+static void _onDebugJson(AsyncWebServerRequest *request)
+{
+#ifdef WEB_SECURE
+    if (!webAuthenticate(request))
+    {
+        return request->requestAuthentication(SETTING("espname").c_str());
+    }
+#endif
+
+    WebSender sender;
+    sender.DebugJson(request);
+}
+#endif
 
 class WebServerClass
 {
-  public:
+public:
     WebServerClass() {}
 
     void begin()
@@ -156,9 +213,20 @@ class WebServerClass
         _server->on(COMMAND_INIT_DATABASE, HTTP_GET, _onInitDb);
         _server->on(COMMAND_UNLOCK_STABILITY, HTTP_GET, _onUnlock);
         _server->on(COMMAND_MQTT_SELF_SENDER, HTTP_GET, _onMqtt);
+
+#ifdef DEBUG_WEB_SUPPORT
+        _server->on(COMMAND_DEBUG_JSON, HTTP_GET, _onDebugJson);
+#endif
+
+
+#ifdef OTA // OTA UPDATE COMMAND
+        _server->on(COMMAND_OTA_UPDATYE, HTTP_GET, _onOTA_GET);
+        _server->on(COMMAND_OTA_UPDATYE, HTTP_POST, _onOTA_POST_END,_onOTA_POST);
+#endif
+
         _server->begin();
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG("[WEBSERVER] Webserver running on port %u \n", port);
 #endif
     }

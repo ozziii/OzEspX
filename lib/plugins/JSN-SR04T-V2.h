@@ -44,13 +44,13 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
 
             initialized = true;
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[JSN][%s] IS INITIALZED  \n"), name.c_str());
 #endif
         }
         else
         {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
             DEBUG_MSG_P(PSTR("[JSN][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
 #endif
         }
@@ -79,30 +79,15 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
             {
                 distance += value;
             }
-#ifdef DEBUG
+#ifdef DEBUG_INFO
             DEBUG_MSG_P(PSTR("[JSN][%s] READ VALUE %d at i : %d \n"), name.c_str(), value, i);
 #endif
             i++;
         }
-#ifdef DEBUG
+#ifdef DEBUG_INFO
         DEBUG_MSG_P(PSTR("[JSN][%s] DITANCE IS %d mm \n"), name.c_str(), distance);
 #endif
 
-
-        /*
-        IO.writeDigital(trig_pin,LOW); // Set the trigger pin to low for 2uS
-        delayMicroseconds(2);
-        IO.writeDigital(trig_pin,HIGH); // Send a 10uS high to trigger ranging
-        delayMicroseconds(10);
-        IO.writeDigital(trig_pin,LOW); // Send pin low again
-    //26000
-        int distance = IO.ipulseIn(echo_pin, HIGH,5000); // Read in times pulse
-//int distance = 0;
-        distance = distance/58;
-        #ifdef DEBUG
-            DEBUG_MSG_P(PSTR("[JSN][%s] DITANCE IS %d cm \n"), name.c_str(),distance);
-        #endif   
-        */
     }
 
     static const char *ClassName() { return "JSN-SR04T-V2"; }

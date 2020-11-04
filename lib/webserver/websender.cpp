@@ -3,9 +3,12 @@
 #include <debug_o.h>
 #include <plugins.h>
 
+
+
+
 void WebSender::home(AsyncWebServerRequest *request)
 {
-    AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", webui_image, webui_image_len);
+    AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", index_image, index_image_len);
     response->addHeader("Content-Encoding", "gzip");
     response->addHeader("X-XSS-Protection", "1; mode=block");
     response->addHeader("X-Content-Type-Options", "nosniff");
@@ -20,6 +23,17 @@ void WebSender::homeJson(AsyncWebServerRequest *request)
 
     DynamicJsonBuffer jsonBuffer;
     JsonObject &root = jsonBuffer.createObject();
+
+    JsonArray &configs = root.createNestedArray("config");
+    JsonObject &config00 = jsonBuffer.createObject();
+    config00["key"] = "debug";
+#ifdef DEBUG_WEB_SUPPORT
+    config00["value"] = true;
+#else
+    config00["value"] = false;
+#endif
+    configs.add(config00);
+
 
     JsonArray &params = root.createNestedArray("parameters");
 
@@ -222,3 +236,30 @@ void WebSender::execute_mqtt(AsyncWebServerRequest *request,OnWebMqttCallback ca
     request->send(response);
     return;
 }
+
+
+#ifdef DEBUG_WEB_SUPPORT
+void WebSender::DebugJson(AsyncWebServerRequest *request)
+{
+    AsyncResponseStream *response = request->beginResponseStream("text/json");
+
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject &root = jsonBuffer.createObject();
+
+    JsonArray &JDebugList = root.createNestedArray("debug");
+
+    for (std::list<String>::iterator it=debugList.begin(); it != debugList.end(); ++it)
+    {
+        JsonObject &JDebugRow = jsonBuffer.createObject();
+
+        JDebugRow["row"] = *it;
+
+        JDebugList.add(JDebugRow);
+    }
+
+    root.printTo(*response);
+
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    request->send(response);
+}
+#endif

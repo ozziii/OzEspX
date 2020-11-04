@@ -15,7 +15,7 @@
 
 class binary_sensor : public plugin_base, public plugin_interrupt, public plugin_sensor
 {
-  public:
+public:
     binary_sensor(const char *init)
     {
         std::vector<String> config = splitString(init, PLUGIN_INIT_SEPARATOR_CHAR);
@@ -62,15 +62,18 @@ class binary_sensor : public plugin_base, public plugin_interrupt, public plugin
                 IO.setMode(_read_pin, INPUT_MODE);
             }
 
-            // SET INTERRUPT
-            SetInterrups(_read_pin, INTERRUP_MODE_CHANGE);
+            if (sensor_delay == 0)
+            {
+                // SET INTERRUPT
+                SetInterrups(_read_pin, INTERRUP_MODE_CHANGE);
+            }
 
             // MQTT CONFIGURATION
             topic_state = buildTopic(MQTT_COMMAND_STATE);
 
             initialized = true;
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[BINARIY_SENSOR][%s] CREATE (READ PIN: %d) \n"), name.c_str(), _read_pin);
         }
         else
@@ -92,15 +95,23 @@ class binary_sensor : public plugin_base, public plugin_interrupt, public plugin
 
     virtual void execute_sensor() override
     {
-        const char *state = IO.readDigital(_read_pin) == _read_logic_ON ? MQTT_STATE_ON : MQTT_STATE_OFF;
-        Network.send(topic_state.c_str(), state);
+        bool new_state = IO.readDigital(_read_pin) == _read_logic_ON;
+
+        if (new_state != this->state)
+        {
+            this->state = new_state;
+            const char *str_state = this->state ? MQTT_STATE_ON : MQTT_STATE_OFF;
+            Network.send(topic_state.c_str(), str_state);
+        }
     }
 
     static const char *ClassName() { return "BINARIY_SENSOR"; }
 
-  protected:
+protected:
     uint8_t _read_pin;
     uint8_t _read_logic_ON;
+
+    bool state = false;
 
     String topic_state;
 };

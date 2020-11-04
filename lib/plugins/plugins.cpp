@@ -24,8 +24,12 @@ const html_plugin plugin_list[] = {
 
     {binary_sensor::ClassName(), "[*]/[NAME]/[read pin]/[delay (s)]=0/[read logic 1:0]=1/[Pull up 1:0]=0"},
 
+    {BME280Plugin::ClassName(), "[*]/[NAME]/[delay]" },
+
+    {bell_plugin::ClassName(), "[*]/[NAME]/[action pin]/[action logic 1:0]=1/[start pin 1:0]=0" },
+
 #ifdef PLUGIN_PZEM004T
-    {PZEM004T_o::ClassName(), "[*]/[NAME]/[delay]/[Hardware(0):Software(1)]/[Serial or Tx pin]=2/[Rx pin]=0"},
+    {PZEM004T_o::ClassName(), "[*]/[NAME]/[delay]/[Serial or (Tx_pin-Rx_pin)]"},
 #endif
 
 #ifdef PLUGIN_JSNSR04TV2
@@ -39,6 +43,20 @@ const html_plugin plugin_list[] = {
 #ifdef NEXTION
     {nextion_plugin::ClassName(), "[*]/[NAME]/[delay (ms)]/[Hardware Serial]"},
 #endif
+
+
+#ifdef PLUGIN_SPEAKER
+    {speaker::ClassName(), "[*]/[NAME]/[BCK]/[RLC]/[DIN]/[ENABLE PIN ?]"},
+#endif
+
+#ifdef PLUGIN_I2S2UDP
+    {i2s2udp::ClassName(), "[*]/[NAME]/[BCK]/[RLC]/[DIN]"},
+#endif
+
+#ifdef PLUGIN_VMC
+    {vmc_plugin::ClassName(), "[*]/[NAME]/[ENABLE]/[PWM]/[DIRECTION]"},
+#endif
+
 
 };
 
@@ -136,6 +154,30 @@ void plugins_o::createPlugIn(
         return;
     }
 
+
+    //************** BME280 *************
+    if (strcmp(name, BME280Plugin::ClassName()) == 0)
+    {
+        BME280Plugin *item = new BME280Plugin(initString.c_str());
+        if (item->isInitialized())
+        {
+            _sensors->push_back(item);
+        }
+        return;
+    }
+
+
+    //************** BELL *************
+    if (strcmp(name, bell_plugin::ClassName()) == 0)
+    {
+        bell_plugin *item = new bell_plugin(initString.c_str());
+        if (item->isInitialized())
+        {
+            _responses->push_back(item);
+        }
+        return;
+    }
+
 #ifdef PLUGIN_JSNSR04TV2
     //************** JSN-SR04T-V2 PLUGIN *************
     if (strcmp(name, JSNSR04TV2::ClassName()) == 0)
@@ -162,7 +204,7 @@ void plugins_o::createPlugIn(
     }
 #endif
 
-    //************** PZEM_004T PLUGIN *************
+    //************** LED DIMMER PLUGIN *************
     if (strcmp(name, led_plugin::ClassName()) == 0)
     {
         led_plugin *item = new led_plugin(initString.c_str());
@@ -224,6 +266,48 @@ void plugins_o::createPlugIn(
         return;
     }
 #endif
+
+
+#ifdef PLUGIN_SPEAKER
+    //************** SPEAKER i2s PUGIN *************
+    if (strcmp(name, speaker::ClassName()) == 0)
+    {
+        speaker *item = new speaker(initString.c_str());
+        if (item->isInitialized())
+        {
+            _responses->push_back(item);
+        }
+        return;
+    }
+#endif
+
+
+#ifdef PLUGIN_I2S2UDP
+    //**************  i2s to UDP PUGIN *************
+    if (strcmp(name, i2s2udp::ClassName()) == 0)
+    {
+        i2s2udp *item = new i2s2udp(initString.c_str());
+        if (item->isInitialized())
+        {
+            _sensors->push_back(item);
+        }
+        return;
+    }
+#endif
+
+#ifdef PLUGIN_VMC
+    //**************  VMC PUGIN *************
+    if (strcmp(name, vmc_plugin::ClassName()) == 0)
+    {
+        vmc_plugin *item = new vmc_plugin(initString.c_str());
+        if (item->isInitialized())
+        {
+            _responses->push_back(item);
+        }
+        return;
+    }
+#endif
+
 };
 
 html_plugin plugins_o::get(uint8_t index)

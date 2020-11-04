@@ -35,3 +35,4 @@
 /.pioenvs/*
 /.piolibdeps/*
 /.vscode/*
+node_modules

@@ -51,10 +51,12 @@ bool wifi_o::loop()
             WiFi.setAutoConnect(true);
             WiFi.setAutoReconnect(true);
             this->_change_state(STATE_STA_CONNECTED);
-#ifdef DEBUG
-            DEBUG_MSG_P(PSTR("[WIFI] CONNECTED!! MY IP: %s \n"),WiFi.localIP.toString().c_str());
+#ifdef DEBUG_LOG
+            DEBUG_MSG_P(PSTR("[WIFI] CONNECTED!! MY IP: %s \n"), WiFi.localIP().toString().c_str());
 #endif
             return true;
+        case WL_CONNECTION_LOST:
+            break;
         }
 
         if (this->_timeout + WIFI_O_STA_CONNECTING_TIMEOUT < millis())
@@ -72,7 +74,7 @@ bool wifi_o::loop()
         }
         else
         {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
             DEBUG_MSG_P(PSTR("[WIFI] CONNECTION LOST! \n"));
 #endif
             this->_change_state(STATE_STA_NOT_CONNECTED);
@@ -94,7 +96,7 @@ bool wifi_o::loop()
     {
         if (this->_sta_connection_try < WIFI_O_STA_CONNECTION_TRY)
         {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[WIFI] CONNECTION FAILED! NEW TRY %d \n"), this->_sta_connection_try + 1);
 #endif
             this->_sta_connection_try++;
@@ -102,7 +104,7 @@ bool wifi_o::loop()
         }
         else
         {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
             DEBUG_MSG_P(PSTR("[WIFI] CONNECTION FAILED! NO MORE TRY: START ACCESS POINT\n"));
 #endif
             this->_change_state(STATE_AP_CREATE);
@@ -138,7 +140,7 @@ bool wifi_o::loop()
 
     case STATE_SCAN_START:
     {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[WIFI] WIFI SCAN BEGIN... \n"));
 #endif
         this->_startSCAN();
@@ -167,18 +169,17 @@ bool wifi_o::loop()
 
         if (scanResult > 0)
         {
-#ifdef DEBUG
-        DEBUG_MSG_P(PSTR("[WIFI] SCAN FINISH WHIT %d NETWORK FOUD \n"));
+#ifdef DEBUG_LOG
+        DEBUG_MSG_P(PSTR("[WIFI] SCAN FINISH WHIT %d NETWORK FOUD \n"),scanResult);
 #endif
             if (this->_populate_network(scanResult))
             {
-
                 this->_change_state(STATE_STA_CONNECTION);
                 return false;
             }
             else
             {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
                 DEBUG_MSG_P(PSTR("[WIFI] NO NETWORK KNOWN START ACCESS POINT \n"));
 #endif
                 this->_change_state(STATE_SCAN_NO_NETWORK);
@@ -186,7 +187,7 @@ bool wifi_o::loop()
         }
         else
         {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[WIFI] NO NETWORK FOUND START ACCESS POINT \n"));
 #endif
             this->_change_state(STATE_SCAN_NO_NETWORK);
@@ -336,7 +337,7 @@ bool wifi_o::_populate_network(uint8_t networkCount)
             }
         }
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         {
             DEBUG_MSG_P(PSTR("%s BSSID: %02X:%02X:%02X:%02X:%02X:%02X CH: %2d RSSI: %3d SSID: %s \n"),
                         (known ? "-->" : "   "),
@@ -394,7 +395,7 @@ void wifi_o::_startSTA()
     //    WiFi.config(network.ip, network.gw, network.netmask, network.dns);
     //}
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
     DEBUG_MSG_P(PSTR("[WIFI] TRY TO CONNECT SSID: %s \n"), network.ssid.c_str());
 #endif
 

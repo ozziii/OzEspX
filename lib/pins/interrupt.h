@@ -2,6 +2,7 @@
 #define INTERRUPTS_H
 
 #include <Arduino.h>
+#include <debug_o.h>
 
 #ifdef ESP32
 #else
@@ -22,10 +23,6 @@ class InterruptsClass
 
     void Push(uint8_t pin)
     {
-
-    Serial.printf("[INTERRUPTS] TRIGGER AT PIN %d \n ", pin);
-
-
 #ifdef ESP32
         xQueueSend(queue, &pin, portMAX_DELAY);
 #else
@@ -68,18 +65,16 @@ class InterruptsClass
 extern InterruptsClass Interrupts;
 
 
-
-
-static unsigned long last_trigger_pin00 = 0; static void ICACHE_RAM_ATTR OnInterrupt_00() { if( millis() > last_trigger_pin00 + DEBOUNCING_DELAY ){ last_trigger_pin00 = millis(); Interrupts.Push(0); } }
-static unsigned long last_trigger_pin01 = 0; static void ICACHE_RAM_ATTR OnInterrupt_01() { if( millis() > last_trigger_pin01 + DEBOUNCING_DELAY ){ last_trigger_pin01 = millis(); Interrupts.Push(1); } }
-static unsigned long last_trigger_pin02 = 0; static void ICACHE_RAM_ATTR OnInterrupt_02() { if( millis() > last_trigger_pin02 + DEBOUNCING_DELAY ){ last_trigger_pin02 = millis(); Interrupts.Push(2); } }
-static unsigned long last_trigger_pin03 = 0; static void ICACHE_RAM_ATTR OnInterrupt_03() { if( millis() > last_trigger_pin03 + DEBOUNCING_DELAY ){ last_trigger_pin03 = millis(); Interrupts.Push(3); } }
-static unsigned long last_trigger_pin04 = 0; static void ICACHE_RAM_ATTR OnInterrupt_04() { if( millis() > last_trigger_pin04 + DEBOUNCING_DELAY ){ last_trigger_pin04 = millis(); Interrupts.Push(4); } }
-static unsigned long last_trigger_pin05 = 0; static void ICACHE_RAM_ATTR OnInterrupt_05() { if( millis() > last_trigger_pin05 + DEBOUNCING_DELAY ){ last_trigger_pin05 = millis(); Interrupts.Push(5); } }
-static unsigned long last_trigger_pin06 = 0; static void ICACHE_RAM_ATTR OnInterrupt_06() { if( millis() > last_trigger_pin06 + DEBOUNCING_DELAY ){ last_trigger_pin06 = millis(); Interrupts.Push(6); } }
-static unsigned long last_trigger_pin07 = 0; static void ICACHE_RAM_ATTR OnInterrupt_07() { if( millis() > last_trigger_pin07 + DEBOUNCING_DELAY ){ last_trigger_pin07 = millis(); Interrupts.Push(7); } }
-static unsigned long last_trigger_pin08 = 0; static void ICACHE_RAM_ATTR OnInterrupt_08() { if( millis() > last_trigger_pin08 + DEBOUNCING_DELAY ){ last_trigger_pin08 = millis(); Interrupts.Push(8); } }
-static unsigned long last_trigger_pin09 = 0; static void ICACHE_RAM_ATTR OnInterrupt_09() { if( millis() > last_trigger_pin09 + DEBOUNCING_DELAY ){ last_trigger_pin09 = millis(); Interrupts.Push(9); } }
+static unsigned long last_trigger_pin00 = 0; static void ICACHE_RAM_ATTR OnInterrupt_00() { if( millis() > last_trigger_pin00 + DEBOUNCING_DELAY ){ last_trigger_pin00 = millis(); Interrupts.Push(0);  } }
+static unsigned long last_trigger_pin01 = 0; static void ICACHE_RAM_ATTR OnInterrupt_01() { if( millis() > last_trigger_pin01 + DEBOUNCING_DELAY ){ last_trigger_pin01 = millis(); Interrupts.Push(1);  } }
+static unsigned long last_trigger_pin02 = 0; static void ICACHE_RAM_ATTR OnInterrupt_02() { if( millis() > last_trigger_pin02 + DEBOUNCING_DELAY ){ last_trigger_pin02 = millis(); Interrupts.Push(2);  } }
+static unsigned long last_trigger_pin03 = 0; static void ICACHE_RAM_ATTR OnInterrupt_03() { if( millis() > last_trigger_pin03 + DEBOUNCING_DELAY ){ last_trigger_pin03 = millis(); Interrupts.Push(3);  } }
+static unsigned long last_trigger_pin04 = 0; static void ICACHE_RAM_ATTR OnInterrupt_04() { if( millis() > last_trigger_pin04 + DEBOUNCING_DELAY ){ last_trigger_pin04 = millis(); Interrupts.Push(4);  } }
+static unsigned long last_trigger_pin05 = 0; static void ICACHE_RAM_ATTR OnInterrupt_05() { if( millis() > last_trigger_pin05 + DEBOUNCING_DELAY ){ last_trigger_pin05 = millis(); Interrupts.Push(5);  } }
+static unsigned long last_trigger_pin06 = 0; static void ICACHE_RAM_ATTR OnInterrupt_06() { if( millis() > last_trigger_pin06 + DEBOUNCING_DELAY ){ last_trigger_pin06 = millis(); Interrupts.Push(6);  } }
+static unsigned long last_trigger_pin07 = 0; static void ICACHE_RAM_ATTR OnInterrupt_07() { if( millis() > last_trigger_pin07 + DEBOUNCING_DELAY ){ last_trigger_pin07 = millis(); Interrupts.Push(7);  } }
+static unsigned long last_trigger_pin08 = 0; static void ICACHE_RAM_ATTR OnInterrupt_08() { if( millis() > last_trigger_pin08 + DEBOUNCING_DELAY ){ last_trigger_pin08 = millis(); Interrupts.Push(8);  } }
+static unsigned long last_trigger_pin09 = 0; static void ICACHE_RAM_ATTR OnInterrupt_09() { if( millis() > last_trigger_pin09 + DEBOUNCING_DELAY ){ last_trigger_pin09 = millis(); Interrupts.Push(9);  } }
 static unsigned long last_trigger_pin10 = 0; static void ICACHE_RAM_ATTR OnInterrupt_10() { if( millis() > last_trigger_pin10 + DEBOUNCING_DELAY ){ last_trigger_pin10 = millis(); Interrupts.Push(10); } }
 #ifdef ESP32
 static unsigned long last_trigger_pin11 = 0; static void ICACHE_RAM_ATTR OnInterrupt_11() { if( millis() > last_trigger_pin11 + DEBOUNCING_DELAY ){ last_trigger_pin11 = millis(); Interrupts.Push(11); } }
@@ -246,5 +241,51 @@ static void SetInterrups(uint8_t pin, int mode)
 #endif
     }
 }
+
+#ifdef ESP32
+static void SetTouchInterrups(uint8_t pin, uint16_t threshold)
+{
+    switch (pin)
+    {
+    case T0:
+        touchAttachInterrupt(pin, OnInterrupt_04, threshold);
+        break;
+    case T1:
+        touchAttachInterrupt(pin, OnInterrupt_00, threshold);
+        break;
+    case T2:
+        touchAttachInterrupt(pin, OnInterrupt_02, threshold);
+        break;
+    case T3:
+        touchAttachInterrupt(pin, OnInterrupt_15, threshold);
+        break;
+    case T4:
+        touchAttachInterrupt(pin, OnInterrupt_13, threshold);
+        break;
+    case T5:
+        touchAttachInterrupt(pin, OnInterrupt_12, threshold);
+        break;
+    case T6:
+        touchAttachInterrupt(pin, OnInterrupt_14, threshold);
+        break;
+    case T7:
+        touchAttachInterrupt(pin, OnInterrupt_27, threshold);
+        break;
+    case T8:
+        touchAttachInterrupt(pin, OnInterrupt_33, threshold);
+        break;
+    case T9:
+        touchAttachInterrupt(pin, OnInterrupt_32, threshold);
+        break;  
+    default:
+#ifdef DEBUG_ERROR
+            DEBUG_MSG_P(PSTR("[PINS][ERROR] %d IS NOT VALID PIN FOR TOUCH \n"), pin);
+#endif
+        break;
+
+    }
+}
+
+#endif
 
 #endif

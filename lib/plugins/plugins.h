@@ -19,7 +19,8 @@
 #include "led_plugin.h"
 #include "bistableRelayPinStateNI.h"
 #include "binary_sensor.h"
-
+#include "BME280Plugin.h"
+#include "bell_plugin.h"
 
 #ifdef PLUGIN_PZEM004T
 #include "PZEM004T_o.h"
@@ -37,6 +38,18 @@
 #include "nextion_plugin.h"
 #endif
 
+
+#ifdef PLUGIN_SPEAKER
+#include "speaker.h"
+#endif
+
+#ifdef PLUGIN_I2S2UDP
+#include "i2s2udp.h"
+#endif
+
+#ifdef PLUGIN_VMC
+#include "vmc_plugin.h"
+#endif
 
 struct html_plugin
 {

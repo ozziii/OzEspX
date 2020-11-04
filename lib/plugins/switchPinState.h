@@ -16,7 +16,7 @@
 
 class switchPinState : public plugin_base, public plugin_interrupt, public plugin_response, public plugin_sensor
 {
-  public:
+public:
     switchPinState(const char *init)
     {
         std::vector<String> config = splitString(init, PLUGIN_INIT_SEPARATOR_CHAR);
@@ -104,14 +104,14 @@ class switchPinState : public plugin_base, public plugin_interrupt, public plugi
 
             initialized = true;
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[SWITCH][%s] CREATE (ACTION PIN: %d) (READ PIN: %d) \n"), name.c_str(), _action_pin, _read_pin);
             DEBUG_MSG_P(PSTR("[SWITCH][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
 #endif
         }
         else
         {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
             DEBUG_MSG_P(PSTR("[RELAY][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
 #endif
         }
@@ -155,18 +155,27 @@ class switchPinState : public plugin_base, public plugin_interrupt, public plugi
         if (_read_pin != pin)
             return false;
 
-        const char *state = IO.readDigital(_read_pin) == _read_logic_ON ? MQTT_STATE_ON : MQTT_STATE_OFF;
+        this->state = IO.readDigital(_read_pin) == _read_logic_ON;
 
-        Network.send(topic_state.c_str(), state);
+        const char *str_state = this->state ? MQTT_STATE_ON : MQTT_STATE_OFF;
+
+        Network.send(topic_state.c_str(), str_state);
 
         return true;
     }
 
     virtual void execute_sensor() override
     {
-        const char *state = IO.readDigital(_read_pin) == _read_logic_ON ? MQTT_STATE_ON : MQTT_STATE_OFF;
-        Network.send(topic_state.c_str(), state);
-#ifdef DEBUG
+        bool temp_state = IO.readDigital(_read_pin) == _read_logic_ON;
+
+        if (temp_state != state)
+        {
+            this->state = state;
+            const char *str_state = this->state ? MQTT_STATE_ON : MQTT_STATE_OFF;
+            Network.send(topic_state.c_str(), str_state);
+        }
+
+#ifdef DEBUG_INFO
         DEBUG_MSG_P(PSTR("[RELAY][%s] SEND STATE ( %s ) value %s \n"), name.c_str(), topic_state.c_str(), state);
 #endif
     }
@@ -182,6 +191,8 @@ class switchPinState : public plugin_base, public plugin_interrupt, public plugi
 
     String topic_state;
     String topic_action;
+
+    bool state = false;
 
     static const char *ClassName() { return "SWITCH_PIN_STATE"; }
 };

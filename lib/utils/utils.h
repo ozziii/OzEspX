@@ -54,6 +54,14 @@ static std::vector<String> splitString(const char *init, char c)
     return ret;
 }
 
+static String stringjoin(const char *one, const char *two)
+{
+    String stret;
+    stret += one;
+    stret += two;
+    return stret;
+}
+
 static String stringjoin(char *one, char *two)
 {
     String stret;

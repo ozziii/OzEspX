@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ESP-MQTT</title>
+    <meta charset="utf-8" />
+    <!-- shortcut::html/favicon.ico -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- build:css style.css -->
+    <link rel="stylesheet" href="jquery-confirm.min.css" />
+    <link rel="stylesheet" href="main.css" />
+    <!-- endbuild -->
+</head>
+
+
+<body>
+    <div class="body">
+        <div class="body_intestation">
+            ESP-MQTT DOMOTIC FIRMWARE
+            <br>
+            UPDATE FIRMWARE
+        </div>
+        <form id="upload_form" enctype="multipart/form-data" method="post">
+            <div class="body_button">
+                <div class="cointainer_button"><input type="file" name="file1" id="file1" accept=".bin"></div>
+                <div class="cointainer_button"><input type="button" class="head_button red_button" value="Upload File" onclick="uploadFile()"></div>
+            </div>
+
+            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+            <h3 id="status"></h3>
+            <p id="loaded_n_total"></p>
+
+        </form>
+    </div>
+</body>
+
+<!-- build:js script.js -->
+<script src="jquery-3.2.1.min.js"></script>
+<script src="jquery-confirm.min.js"></script>
+<script src="upload.js"></script>
+<!-- endbuild -->
+
+</html>

@@ -32,7 +32,7 @@ static void InterruptTask(void *parameter)
     {
         // BLOCKING FUNCTION: WAIT FOR INTERRUP
         int8_t interruptPin = Interrupts.Get();
-#ifdef DEBUG
+#ifdef DEBUG_INFO
         DEBUG_MSG_P(PSTR("[EXEC] INTERRUPS PIN ( %d ) \n"), interruptPin);
 #endif
         for (uint8_t i = 0; i < _interrups.size(); i++)
@@ -95,7 +95,7 @@ class executor
 
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[EXEC][BEGIN] CREATE  %d INTERRUPS,  %d RESPONSER, %d SENSOR  \n"), _interrups.size(), _responses.size(), _tiker_sensors.size());
 #endif
     }
@@ -106,7 +106,7 @@ class executor
 #ifndef ESP32
         for (int8_t interruptPin = Interrupts.Get(); interruptPin >= 0; interruptPin = Interrupts.Get())
         {
-#ifdef DEBUG
+#ifdef DEBUG_INFO
             DEBUG_MSG_P(PSTR("[EXEC] INTERRUPS PIN ( %d ) \n"), interruptPin);
 #endif
             for (uint8_t i = 0; i < _interrups.size(); i++)
@@ -122,7 +122,7 @@ class executor
 
     void mqttrecive(const char *topic, const char *message)
     {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[EXEC] ARRIVE MQTT TOPIC (%s) MESSAGE (%s) \n"), topic, message);
 #endif
         for (uint8_t i = 0; i < _responses.size(); i++)

@@ -132,7 +132,7 @@ String SettingClass::Read(Parameter item, uint16_t index)
     String value;
     char ee;
 
-    for( int i = 0 ; i < item.size & ( ee = EEPROM.read(index++)) != DATABSE_END_CHAR ; i++ )
+    for( int i = 0 ; (i < item.size) & (( ee = EEPROM.read(index++)) != DATABSE_END_CHAR) ; i++ )
     {
         value += ee;
     }

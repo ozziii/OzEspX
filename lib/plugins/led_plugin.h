@@ -12,7 +12,6 @@
 *
 *********************************************************************************************************************************************/
 
-#define PIN_SEPARATOR_CHAR '-'
 
 class led_plugin : public plugin_base, public plugin_response
 {
@@ -46,7 +45,7 @@ class led_plugin : public plugin_base, public plugin_response
                 }
                 else
                 {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
                     DEBUG_MSG_P(PSTR("[LED][%s][ERROR] INITIALZATION ERROR WRONG RGB PIN \n"), name.c_str());
 #endif
                     initialized = false;
@@ -108,7 +107,7 @@ class led_plugin : public plugin_base, public plugin_response
         if (initialized)
         {
             update_lamp();
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[LED][%s] INITIALZATION OK \n"), name.c_str());
             DEBUG_MSG_P(PSTR("[LED][%s] STATE %s \n"), name.c_str(), topic_state.c_str());
             DEBUG_MSG_P(PSTR("[LED][%s] BRIGH %s \n"), name.c_str(), topic_brightness_state.c_str());
@@ -117,7 +116,7 @@ class led_plugin : public plugin_base, public plugin_response
         }
         else
         {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
             DEBUG_MSG_P(PSTR("[LED][%s][ERROR] INITIALZATION ERROR \n"), name.c_str());
 #endif
         }

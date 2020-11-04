@@ -1,0 +1,36 @@
+{
+    "license": "GPL-3.0-only", 
+    "name": "DHT sensor library for ESPx", 
+    "repository": {
+        "url": "https://github.com/beegee-tokyo/DHTesp.git", 
+        "type": "git"
+    }, 
+    "platforms": [
+        "espressif32", 
+        "atmelsam", 
+        "espressif8266", 
+        "atmelavr"
+    ], 
+    "frameworks": [
+        "arduino"
+    ], 
+    "version": "1.17", 
+    "authors": [
+        {
+            "maintainer": false, 
+            "name": "Bernd Giesecke", 
+            "url": "https://github.com/beegee-tokyo", 
+            "email": null
+        }
+    ], 
+    "keywords": [
+        "bus", 
+        "sensor", 
+        "1-wire", 
+        "onewire", 
+        "temperature"
+    ], 
+    "homepage": "http://desire.giesecke.tk/index.php/2018/01/30/esp32-dht11/", 
+    "id": 2029, 
+    "description": "Arduino ESP library for DHT11, DHT22, etc Temp & Humidity Sensors. Last changes: Back to working version by removing the last commit"
+}

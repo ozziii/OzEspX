@@ -1,37 +1,11 @@
-/*
-
-ESP8266 file system builder
-
-Copyright (C) 2016-2018 by Xose Pérez <xose dot perez at gmail dot com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
-/*eslint quotes: ['error', 'single']*/
-/*eslint-env es6*/
-
 // -----------------------------------------------------------------------------
-// Dependencies
+// File system builder
 // -----------------------------------------------------------------------------
 
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
 const through = require('through2');
 
 const htmlmin = require('gulp-htmlmin');
-const uglify = require('gulp-uglify');
 const inline = require('gulp-inline');
 const inlineImages = require('gulp-css-base64');
 const favicon = require('gulp-base64-favicon');
@@ -51,6 +25,7 @@ const path = require('path');
 // -----------------------------------------------------------------------------
 
 const htmlFolder = 'html/';
+const configFolder = 'config/';
 const dataFolder = 'data/';
 const staticFolder = 'lib/static/';
 
@@ -71,8 +46,8 @@ var toHeader = function(name, debug) {
         output += '#define ' + safename + '_len ' + source.contents.length + '\n';
         output += 'const uint8_t ' + safename + '[] PROGMEM = {';
         for (var i=0; i<source.contents.length; i++) {
-            if (i > 0) output += ',';
-            if (0 === (i % 20)) output += '\n';
+            if (i > 0) { output += ','; }
+            if (0 === (i % 20)) { output += '\n'; }
             output += '0x' + ('00' + source.contents[i].toString(16)).slice(-2);
         }
         output += '\n};';
@@ -110,22 +85,13 @@ var htmllintReporter = function(filepath, issues) {
 
 var buildWebUI = function(module) {
 
-    var modules = {'light': false, 'sensor': false, 'rfbridge': false, 'rfm69': false};
-    if ('all' === module) {
-        modules['light'] = true;
-        modules['sensor'] = true;
-        modules['rfbridge'] = false;   // we will never be adding this except when building RFBRIDGE
-        modules['rfm69'] = false;   // we will never be adding this except when building RFM69GW
-    } else if ('small' !== module) {
-        modules[module] = true;
-    }
-
-    return gulp.src(htmlFolder + '*.html').
+    return gulp.src(htmlFolder + module + '.html').
         pipe(htmllint({
-            'failOnError': true,
+            'failOnError': false,
             'rules': {
                 'id-class-style': false,
                 'label-req-for': false,
+                //'line-end-style': false,
             }
         }, htmllintReporter)).
         pipe(favicon()).
@@ -135,7 +101,6 @@ var buildWebUI = function(module) {
             css: [crass, inlineImages],
             disabledTypes: ['svg', 'img']
         })).
-        pipe(remover(modules)).
         pipe(htmlmin({
             collapseWhitespace: true,
             removeComments: true,
@@ -144,9 +109,9 @@ var buildWebUI = function(module) {
         })).
         pipe(replace('pure-', 'p-')).
         pipe(gzip()).
-        pipe(rename('index.' + module + '.html.gz')).
+        pipe(rename(module + '.html.gz')).
         pipe(gulp.dest(dataFolder)).
-        pipe(toHeader('webui_image', true)).
+        pipe(toHeader(module+'_image', true)).
         pipe(gulp.dest(staticFolder));
 
 };
@@ -154,52 +119,20 @@ var buildWebUI = function(module) {
 // -----------------------------------------------------------------------------
 // Tasks
 // -----------------------------------------------------------------------------
-
-gulp.task('certs', function() {
-    gulp.src(dataFolder + 'server.*').
-        pipe(toHeader(debug=false)).
-        pipe(gulp.dest(staticFolder));
+gulp.task('index', function() {
+    return buildWebUI('index');
 });
 
-gulp.task('csslint', function() {
-    gulp.src(htmlFolder + '*.css').
-        pipe(csslint({ids: false})).
-        pipe(csslint.formatter());
+gulp.task('upload', function() {
+    return buildWebUI('upload');
 });
 
-gulp.task('webui_small', function() {
-    return buildWebUI('small');
-});
+gulp.task('webui',
+    gulp.parallel(
+        'index',
+        'upload'
+    )
+);
 
-gulp.task('webui_sensor', function() {
-    return buildWebUI('sensor');
-});
+gulp.task('default', gulp.series('webui'));
 
-gulp.task('webui_light', function() {
-    return buildWebUI('light');
-});
-
-gulp.task('webui_rfbridge', function() {
-    return buildWebUI('rfbridge');
-});
-
-gulp.task('webui_rfm69', function() {
-    return buildWebUI('rfm69');
-});
-
-gulp.task('webui_all', function() {
-    return buildWebUI('all');
-});
-
-gulp.task('webui', function(cb) {
-    runSequence([
-        'webui_small',
-        'webui_sensor',
-        'webui_light',
-        'webui_rfbridge',
-        'webui_rfm69',
-        'webui_all'
-    ], cb);
-});
-
-gulp.task('default', ['webui']);

@@ -34,7 +34,7 @@ http://crcibernetica.com
  and copyright notices in any redistribution of this code
  **********************************************************************************
  */
-
+#ifdef PLUGIN_NEXTION
 #include "Nextion_o.h"
 
 Nextion::Nextion(SoftwareSerial &next, uint32_t baud) : soft_nextion(&next)
@@ -452,3 +452,5 @@ void Nextion::serial_flush()
     hard_nextion->flush();
   }
 }
+
+#endif

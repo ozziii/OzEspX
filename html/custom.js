@@ -1,7 +1,8 @@
-//var debug_url = "http://192.168.0.11";
+//var debug_url = "http://192.168.0.148";
 var debug_url = "";
 
 var inti_url = debug_url + "/indexj";
+var Jdebug_url = debug_url + "/debugj";
 var config_url = debug_url + "/config";
 var edit_config_url = debug_url + "/editconfig";
 var reset_config_url = debug_url + "/defaultsettings";
@@ -12,14 +13,12 @@ var unlock_config_url = debug_url + "/stability";
 var toUpdate = [];
 
 
-
 function Initpage() {
     $.getJSON(inti_url, function (data) {
         $('#Parameters').html(Mustache.render($('#head-template').html(), data));
         $('#PlugIns').html(Mustache.render($('#plugin-template').html(), data));
 
         var parameters = data["parameters"]
-
         for (var i = 0; i < parameters.length; i++) {
             if (parameters[i].key === 'Stabile') {
                 if (!parameters[i].value) {
@@ -27,6 +26,17 @@ function Initpage() {
                 }
             }
         }
+
+        var config = data["config"]
+        for (var i = 0; i < config.length; i++) {
+            if (config[i].key === 'debug') {
+                if (config[i].value) {
+                    $("#body_debug").show();
+                    UpdateDebug();
+                }
+            }
+        }
+
     })
 }
 
@@ -276,6 +286,8 @@ function SendMQTT() {
             content: "ERROR: Topic IS NULL!!",
             theme: 'supervan'
         });
+
+        return;
     }
 
     if (!message || 0 === message.length) {
@@ -284,6 +296,8 @@ function SendMQTT() {
             content: "ERROR: Payload IS NULL!!",
             theme: 'supervan'
         });
+
+        return;
     }
 
 
@@ -327,15 +341,22 @@ function SendMQTT() {
     });
 }
 
+
+function UpdateDebug(){
+    $.getJSON(Jdebug_url, function (data) {
+        $('#debug_container').html(Mustache.render($('#debug-template').html(), data));
+    })
+}
+
 $(function () {
-    Initpage();
-    UpdatePage();
+        Initpage();
+        UpdatePage();
 
-    $("#refresh_button").on('click', UpdatePage);
-    $("#reset_button").on('click', Reset);
-    $("#restart_button").on('click', Restart);
-    $("#submit_button").on('click', Submit);
-    $("#unlock_button").on('click', Unlock);
-    $("#mqtt_send_button").on('click', SendMQTT);
-
-});
+        $("#refresh_button").on('click', UpdatePage);
+        $("#reset_button").on('click', Reset);
+        $("#restart_button").on('click', Restart);
+        $("#submit_button").on('click', Submit);
+        $("#unlock_button").on('click', Unlock);
+        $("#mqtt_send_button").on('click', SendMQTT);
+        $("#debug_refresh_button").on('click', UpdateDebug);
+    });

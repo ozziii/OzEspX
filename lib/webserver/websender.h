@@ -18,6 +18,10 @@ class WebSender
     void save_config(AsyncWebServerRequest *request);
     void unlockSystem(AsyncWebServerRequest *request);
     void execute_mqtt(AsyncWebServerRequest *request,OnWebMqttCallback callback);
+#ifdef DEBUG_WEB_SUPPORT
+    void DebugJson(AsyncWebServerRequest *request);
+#endif
+    
 };
 
 #endif

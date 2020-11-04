@@ -12,7 +12,7 @@ void mqtt_o::mqttBegin()
         _mqttOnConnect();
     });
     _mqtt.onDisconnect([](AsyncMqttClientDisconnectReason reason) {
-#ifdef DEBUG
+#ifdef DEBUG_ERROR
         if (reason == AsyncMqttClientDisconnectReason::TCP_DISCONNECTED)
         {
             DEBUG_MSG_P(PSTR("[MQTT] TCP Disconnected\n"));
@@ -40,10 +40,14 @@ void mqtt_o::mqttBegin()
         _mqttOnMessage(topic, payload, len);
     });
     _mqtt.onSubscribe([](uint16_t packetId, uint8_t qos) {
+#ifdef DEBUG_INFO        
         DEBUG_MSG_P(PSTR("[MQTT] Subscribe ACK for PID %d\n"), packetId);
+#endif
     });
     _mqtt.onPublish([](uint16_t packetId) {
+#ifdef DEBUG_INFO 
         DEBUG_MSG_P(PSTR("[MQTT] Publish ACK for PID %d\n"), packetId);
+#endif
     });
 
 #else // not MQTT_USE_ASYNC
@@ -85,12 +89,12 @@ bool mqtt_o::mqttPublish(const char *topic, const char *message)
     {
 #ifdef MQTT_USE_ASYNC
         unsigned int packetId = _mqtt.publish(topic, MQTT_QoS, MQTT_RETAIN, message);
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Sending %s => %s (PID %d)\n"), topic, message, packetId);
 #endif
 #else
         _mqtt.publish(topic, message, MQTT_RETAIN);
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Sending %s => %s\n"), topic, message);
 #endif
 #endif
@@ -140,7 +144,7 @@ void mqtt_o::_mqttConnect()
 
     if (host.length() == 0)
     {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] No Ip Set \n"));
 
 #endif
@@ -161,7 +165,7 @@ void mqtt_o::_mqttConnect()
     //_mqtt.setWill(MQTT_WILL, MQTT_QoS, MQTT_RETAIN, "0");
     if ((strlen(_mqtt_user.c_str()) > 0) && (strlen(_mqtt_pass.c_str()) > 0))
     {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Connecting as user %s\n"), _mqtt_user.c_str());
 #endif
         _mqtt.setCredentials(_mqtt_user.c_str(), _mqtt_pass.c_str());
@@ -177,13 +181,13 @@ void mqtt_o::_mqttConnect()
 
     _mqtt.setServer(host.c_str(), port);
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
     DEBUG_MSG_P(PSTR("[MQTT] TRY TO CONNECT Ip %s port %d  User %s Passw %s\n"), host.c_str(), port, _mqtt_user.c_str(), _mqtt_pass.c_str());
 #endif
 
     if ((strlen(_mqtt_user.c_str()) > 0) && (strlen(_mqtt_pass.c_str()) > 0))
     {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Connecting as user %s\n"), _mqtt_user.c_str());
 #endif
 
@@ -202,7 +206,7 @@ void mqtt_o::_mqttConnect()
     }
     else
     {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Connection failed\n"));
 #endif
     }
@@ -212,7 +216,7 @@ void mqtt_o::_mqttConnect()
 
 void mqtt_o::_mqttOnDisconnect()
 {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
     DEBUG_MSG_P(PSTR("[MQTT] Disconnected!\n"));
 #endif
 
@@ -232,7 +236,7 @@ void mqtt_o::_mqttOnDisconnect()
 
 void mqtt_o::_mqttOnConnect()
 {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
     DEBUG_MSG_P(PSTR("[MQTT] Connected!\n"));
 #endif
     _mqtt_is_connected = true;
@@ -252,12 +256,12 @@ void mqtt_o::_mqttSubscribe(const char *topic)
     {
 #ifdef MQTT_USE_ASYNC
         unsigned int packetId = _mqtt.subscribe(topic, MQTT_QoS);
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Subscribing to %s (PID %d)\n"), topic, packetId);
 #endif
 #else
         _mqtt.subscribe(topic, MQTT_QoS);
-#ifdef DEBUG
+#ifdef DEBUG_LOG
         DEBUG_MSG_P(PSTR("[MQTT] Subscribing to %s\n"), topic);
 #endif
 #endif

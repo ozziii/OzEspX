@@ -2,19 +2,28 @@
 #define DEBUG_O_H
 
 #include <Arduino.h>
+#include <configuration.h>
+
+#ifdef DEBUG_WEB_SUPPORT
+#include <list>
+#endif
 
 #define DEBUG_MSG(...) debug::debugSend(__VA_ARGS__)
 #define DEBUG_MSG_P(...) debug::debugSend_P(__VA_ARGS__)
 
+
+#ifdef DEBUG_WEB_SUPPORT
+    extern std::list<String> debugList;
+#endif
+
 class debug
 {
   public:
+
     static void debugBegin()
     {
 #ifdef DEBUG_SERIAL_SUPPORT
         DEBUG_PORT.begin(DEBUG_PORT_BLAUD);
-        DEBUG_MSG("\n");
-        DEBUG_MSG("\n");
 #endif
     }
 
@@ -65,9 +74,18 @@ class debug
         DEBUG_PORT.printf(message);
 #endif
 
-#if DEBUG_WEB_SUPPORT
+#ifdef DEBUG_WEB_SUPPORT
+        debugList.push_back(message);
+        if(debugList.size() > MAX_DEBUG_LIST)
+        {
+            debugList.pop_front();
+        }
 #endif
+
     }
 };
+
+
+
 
 #endif

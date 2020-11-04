@@ -17,7 +17,7 @@ static void stability_ticker_function()
 {
     EEPROM.write(STABILITY_INDEX,0);
     EEPROM.commit(); 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
     DEBUG_MSG("[SYSTEM] STABILITY CHECK PASSED!! \n");
 #endif
 }
@@ -65,7 +65,7 @@ class system_o
         uint8_t crash_count = EEPROM.read(STABILITY_INDEX);
         if (crash_count > MAX_CRASH_COUNT)
         {
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG("[SYSTEM] SYSTEM IS UNSTABLE \n");
 #endif
             return false;
@@ -73,7 +73,7 @@ class system_o
         else
         {
             stability_ticker.once(STABILITY_CHECK_TIME_S, stability_ticker_function);
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG("[SYSTEM] START STABILITY CHECK \n");
 #endif
             return true;

@@ -19,7 +19,7 @@
     <div class="body">
         <input type="hidden" value="" id="updateResult">
 
-        <div class="body_intestation"> ESP-MQTT DOMOTIC FIRMWARE </div>
+        <div class="body_intestation"> ESP-MQTT DOMOTIC FIRMWARE <br> UPDATE PAGE </div>
 
         <div id="Parameters" class="body_Parameters">
         </div>
@@ -39,7 +39,13 @@
                 <button id="reset_button" class="head_button red_button">Resetta Device</button>
             </div>
             <div class="cointainer_button">
-                <button id="unlock_button" class="head_button yellow_button" style="display: none;" >Sblocca Device</button>
+                <button id="unlock_button" class="head_button yellow_button" style="display: none;">Sblocca
+                    Device</button>
+            </div>
+            <div class="cointainer_button">
+                <form action="/update">
+                    <button type="submit" class="head_button green_button">OTA UPLOAD</button>
+                </form>
             </div>
         </div>
 
@@ -47,17 +53,35 @@
             <table id="table_setting">
             </table>
         </div>
-        <div class="body_mqtt">
-            <div >
-                SEND MQTT: Topic: 
-                <input id="mqtt_topic_text" type="text">  
-                payload:  
-                <input id="mqtt_payload_text" type="text"> 
-                <input type="button" title="Send" id="mqtt_send_button" > 
+
+        <div id="body_debug" style="display: none;">
+            <div class="body_debug_top">
+                <div class="body_debug_bar">
+                    <span class="body_debug_dot"></span>
+                    <span class="body_debug_dot"></span>
+                    <span class="body_debug_dot"></span>
+                    <span class="body_debug_title" > Debug terminal </span>
+                    <input type="button" value="Refresh" id="debug_refresh_button">
+                </div>
+                <div class="body_debug">
+                    <div id="debug_container"></div>
+                </div>
+
             </div>
         </div>
+
         <div class="foot">
             <div id="PlugIns" class="body_plugin">
+            </div>
+        </div>
+
+        <div class="body_mqtt">
+            <div>
+                SEND MQTT: Topic:
+                <input id="mqtt_topic_text" type="text">
+                payload:
+                <input id="mqtt_payload_text" type="text">
+                <input type="button" title="Send" id="mqtt_send_button">
             </div>
         </div>
 </body>
@@ -107,6 +131,14 @@
     </div>
     {{/plugin}}
 </script>
+
+
+<script id="debug-template" type="text/x-handlebars-template">
+    {{#debug}}
+    <div class="debug_row">{{row}}</div>
+    {{/debug}}
+</script>
+
 
 <!-- build:js script.js -->
 <script src="jquery-3.2.1.min.js"></script>

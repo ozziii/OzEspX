@@ -1,6 +1,7 @@
 #ifndef STATIC_H
 #define STATIC_H
 
-#include <index.all.html.gz.h>
+#include <index.html.gz.h>
+#include <upload.html.gz.h>
 
 #endif

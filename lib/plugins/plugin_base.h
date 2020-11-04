@@ -17,6 +17,7 @@
 #define PLUGIN_SWITCH_ID 3
 
 #define PLUGIN_INIT_SEPARATOR_CHAR 47
+#define PIN_SEPARATOR_CHAR '-'
 
 class plugin_base
 {

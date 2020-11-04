@@ -27,14 +27,14 @@ static unsigned long rf_rx_switch_interval = 1000;
 
 static void recive_rf(int rf_key)
 {
-#ifdef DEBUG
+#ifdef DEBUG_INFO
     DEBUG_MSG_P("[RF] recive key %d \n", rf_key);
 #endif
     if (rf_key == rf_rx_enambleKey)
     {
         if( millis() > rf_rx_last_trigger +  rf_rx_switch_interval )
         {
-#ifdef DEBUG
+#ifdef DEBUG_INFO
         DEBUG_MSG("[RF] key is valid \n");
 #endif
             IO.pumpDigital(rf_rx_switch_pin, RF_SWITCH_PUMP_RELAY);
@@ -71,7 +71,7 @@ class rf_rx_switch : public plugin_base, public plugin_response
 
             initialized = true;
 
-#ifdef DEBUG
+#ifdef DEBUG_LOG
             DEBUG_MSG_P(PSTR("[RF][%s] CREATE (Sensor pin: %d) (action pin: %d) \n"), name.c_str(), rf_pin, rf_rx_switch_pin);
             DEBUG_MSG_P(PSTR("[RF][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), "null");
         }

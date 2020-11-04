@@ -1,0 +1,11 @@
+INSTALL NODE.JS   npm itall too
+
+OPEN NODE.JS COMMAND PROMPT
+
+INSTALL GULP 
+
+run: npm install --global gulp-cli
+
+Install the gulp package in your devDependencies
+
+run: npm install "dependency" 

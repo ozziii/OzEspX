@@ -13,7 +13,7 @@ typedef void (*callback_with_arg_t)(void *);
 
 class TimerHandleParameter
 {
-  public:
+public:
     uint32_t arg;
     callback_with_arg_t callback;
 };
@@ -37,11 +37,11 @@ extern "C"
 
 class ticker_o
 {
-  public:
+public:
     ticker_o() {}
 
     typedef void (*callback_t)(void);
-    
+
     typedef void (*callback_with_arg_t)(void *);
 
     void attach(float seconds, callback_t callback)
@@ -99,10 +99,37 @@ class ticker_o
         _attach_ms(milliseconds, false, reinterpret_cast<callback_with_arg_t>(callback), arg32);
     }
 
+    bool isActive()
+    {
+#ifdef ESP32
+        return this->_tiker_is_running;
+
+        //return (xTimerIsTimerActive(this->_ticker) != pdFALSE);
+#else
+        //TODO change period.
+#endif
+    }
+
+    void changePeriod_ms(uint32_t milliseconds)
+    {
+#ifdef ESP32
+        if (this->_tiker_is_running)
+            xTimerChangePeriod(this->_ticker, pdMS_TO_TICKS(milliseconds), 100);
+#else
+        //TODO change period.
+#endif
+    }
+
+    void changePeriod(float seconds)
+    {
+        this->changePeriod_ms(seconds * 1000);
+    }
+
     void detach()
     {
 #ifdef ESP32
-        xTimerStop(_ticker, 0);
+        xTimerStop(this->_ticker, 0);
+        this->_tiker_is_running = false;
 #else
         if (!_timer)
             return;
@@ -113,7 +140,7 @@ class ticker_o
 #endif
     }
 
-  private:
+private:
     void _attach_ms(uint32_t milliseconds, bool repeat, callback_with_arg_t callback, uint32_t arg)
     {
 #ifdef ESP32
@@ -121,9 +148,10 @@ class ticker_o
         newArgs->arg = arg;
         newArgs->callback = callback;
 
-        _ticker = xTimerCreate("", pdMS_TO_TICKS(milliseconds), (repeat) ? pdTRUE : pdFALSE, (void *)newArgs, prvCallback);
+        this->_ticker = xTimerCreate("", pdMS_TO_TICKS(milliseconds), (repeat) ? pdTRUE : pdFALSE, (void *)newArgs, prvCallback);
 
-        xTimerStart(_ticker, 0);
+        xTimerStart(this->_ticker, 0);
+        this->_tiker_is_running = true;
 #else
         if (_timer)
         {
@@ -141,6 +169,7 @@ class ticker_o
 
 #ifdef ESP32
     TimerHandle_t _ticker;
+    bool _tiker_is_running = false;
     static void prvCallback(TimerHandle_t xTimer)
     {
         TimerHandleParameter *pxStructAddress;

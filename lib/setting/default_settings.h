@@ -33,7 +33,7 @@ const Parameter Parameters[] PROGMEM = {
     { 20  , "NoName" ,"espname" }, 
     { 20  , "admin" ,"WEBUSER" }, 
     { 20  , "admin" ,"WEBPASS" },
-    { 20  , "192.168.0.14" ,"MQTTSIP" },
+    { 20  , "" ,"MQTTSIP" },
     { 20  , "1883" ,"MQTTPORT" },
     { 20  , "mqtt" ,"MQTTUSER" },
     { 20  , "hassio" ,"MQTTPASS" },

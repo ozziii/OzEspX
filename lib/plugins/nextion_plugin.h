@@ -56,9 +56,7 @@ public:
 
       initialized = true;
 
-#ifdef DEBUG_LOG
-      DEBUG_MSG_P(PSTR("[NEXTION][%s] IS INITIALZED DELAY %d ms \n"), name.c_str(), sensor_delay);
-#endif
+      OZ_LOG_I_P(PSTR("[NEXTION][%s] IS INITIALZED DELAY %d ms \n"), name.c_str(), sensor_delay);
 
       //subscribe MQTT ACTION
       for (int i = 0; i < Size_P(GuiFiller); i++)
@@ -83,10 +81,9 @@ public:
           sprintf(command, GuiFiller[i].command, Message.c_str());
           myNextion->sendCommand(command);
 
-#ifdef DEBUG_INFO
-          DEBUG_MSG_P(PSTR("[NEXTION][%s] Arrive MQTT (%s) message (%s) \n"), name.c_str(), GuiFiller[i].topic, Message.c_str());
-          DEBUG_MSG_P(PSTR("[NEXTION][%s] Send command (%s) \n"), name.c_str(), command);
-#endif
+          OZ_LOG_V_P(PSTR("[NEXTION][%s] Arrive MQTT (%s) message (%s) \n"), name.c_str(), GuiFiller[i].topic, Message.c_str());
+          OZ_LOG_V_P(PSTR("[NEXTION][%s] Send command (%s) \n"), name.c_str(), command);
+
           delete[] command;
 
           ret = true;
@@ -104,18 +101,17 @@ public:
     String command = myNextion->listen();
     if (command.length() > 0)
     {
-#ifdef DEBUG_INFO
-      DEBUG_MSG_P(PSTR("[NEXTION][%s] incoming command (%s) \n"), name.c_str(), command.c_str());
-#endif
+      OZ_LOG_V_P(PSTR("[NEXTION][%s] incoming command (%s) \n"), name.c_str(), command.c_str());
+
       for (int i = 0; i < Size_P(GuiCommand); i++)
       {
         if (command.equals(GuiCommand[i].command))
         {
           Network.send(GuiCommand[i].topic, GuiCommand[i].message);
-#ifdef DEBUG_INFO
-          DEBUG_MSG_P(PSTR("[NEXTION][%s] incoming command (%s) \n"), name.c_str(), command.c_str());
-          DEBUG_MSG_P(PSTR("[NEXTION][%s] Send MQTT topic (%s) message (%s) \n"), name.c_str(), GuiCommand[i].topic, GuiCommand[i].message);
-#endif
+
+          OZ_LOG_V_P(PSTR("[NEXTION][%s] incoming command (%s) \n"), name.c_str(), command.c_str());
+          OZ_LOG_V_P(PSTR("[NEXTION][%s] Send MQTT topic (%s) message (%s) \n"), name.c_str(), GuiCommand[i].topic, GuiCommand[i].message);
+
           break;
         }
       }

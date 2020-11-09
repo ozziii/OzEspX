@@ -33,23 +33,19 @@ vmc_plugin::vmc_plugin(const char *init)
 
         initialized = true;
 
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[VMC][%s] CREATE!! (ENABLE PIN: %d, PWM PIN: %d, DIRECTION PIN: %d)\n"),
+        OZ_LOG_I_P(PSTR("[VMC][%s] CREATE!! (ENABLE PIN: %d, PWM PIN: %d, DIRECTION PIN: %d)\n"),
                     name.c_str(),
                     _enable_pin,
                     _pwm_pin,
                     _direction_pin);
-#endif
 
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P(PSTR("[VMC][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
-#endif
+        OZ_LOG_V_P(PSTR("[VMC][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
     }
     else
     {
-#ifdef DEBUG_ERROR
-        DEBUG_MSG_P(PSTR("[VMC][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+
+        OZ_LOG_E_P(PSTR("[VMC][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
+
     }
 }
 

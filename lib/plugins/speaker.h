@@ -78,14 +78,14 @@ size_t Size(T(&)[N])
     return N;
 }
 
-static size_t tas_default_count = Size(Default);
+
 #endif
 
 /****************************************************************
 *            
 *     Speaker network -> i2s 
 *
-*     Init String:  {[*]/[NAME]/[BCK]/[RLC]/[DIN]/[PVDD]/[PDN]/[RESET]/[SCL]/[SDA] }
+*     Init String:  {[*]/[NAME]/[BCK]/[RLC]/[DIN]/[PVDD]/[PDN]/[RESET]/[FAULT]/[SCL]/[SDA] }
 *
 ***************************************************************/
 class speaker : public plugin_base, public plugin_response
@@ -130,6 +130,7 @@ private:
     void stop_speaker();
 
     void i2s_init();
+    
 };
 #endif
 #endif

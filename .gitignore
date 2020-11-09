@@ -36,3 +36,4 @@
 /.piolibdeps/*
 /.vscode/*
 node_modules
+setting/default_settings.h

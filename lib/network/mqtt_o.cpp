@@ -15,23 +15,23 @@ void mqtt_o::mqttBegin()
 #ifdef DEBUG_ERROR
         if (reason == AsyncMqttClientDisconnectReason::TCP_DISCONNECTED)
         {
-            DEBUG_MSG_P(PSTR("[MQTT] TCP Disconnected\n"));
+            OZ_LOG_E_P(PSTR("[MQTT] TCP Disconnected\n"));
         }
         if (reason == AsyncMqttClientDisconnectReason::MQTT_IDENTIFIER_REJECTED)
         {
-            DEBUG_MSG_P(PSTR("[MQTT] Identifier Rejected\n"));
+            OZ_LOG_E_P(PSTR("[MQTT] Identifier Rejected\n"));
         }
         if (reason == AsyncMqttClientDisconnectReason::MQTT_SERVER_UNAVAILABLE)
         {
-            DEBUG_MSG_P(PSTR("[MQTT] Server unavailable\n"));
+            OZ_LOG_E_P(PSTR("[MQTT] Server unavailable\n"));
         }
         if (reason == AsyncMqttClientDisconnectReason::MQTT_MALFORMED_CREDENTIALS)
         {
-            DEBUG_MSG_P(PSTR("[MQTT] Malformed credentials\n"));
+            OZ_LOG_E_P(PSTR("[MQTT] Malformed credentials\n"));
         }
         if (reason == AsyncMqttClientDisconnectReason::MQTT_NOT_AUTHORIZED)
         {
-            DEBUG_MSG_P(PSTR("[MQTT] Not authorized\n"));
+            OZ_LOG_E_P(PSTR("[MQTT] Not authorized\n"));
         }
 #endif
         _mqttOnDisconnect();
@@ -40,14 +40,10 @@ void mqtt_o::mqttBegin()
         _mqttOnMessage(topic, payload, len);
     });
     _mqtt.onSubscribe([](uint16_t packetId, uint8_t qos) {
-#ifdef DEBUG_INFO        
-        DEBUG_MSG_P(PSTR("[MQTT] Subscribe ACK for PID %d\n"), packetId);
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Subscribe ACK for PID %d\n"), packetId);
     });
     _mqtt.onPublish([](uint16_t packetId) {
-#ifdef DEBUG_INFO 
-        DEBUG_MSG_P(PSTR("[MQTT] Publish ACK for PID %d\n"), packetId);
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Publish ACK for PID %d\n"), packetId);
     });
 
 #else // not MQTT_USE_ASYNC
@@ -89,14 +85,12 @@ bool mqtt_o::mqttPublish(const char *topic, const char *message)
     {
 #ifdef MQTT_USE_ASYNC
         unsigned int packetId = _mqtt.publish(topic, MQTT_QoS, MQTT_RETAIN, message);
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Sending %s => %s (PID %d)\n"), topic, message, packetId);
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Sending %s => %s (PID %d)\n"), topic, message, packetId);
+
 #else
         _mqtt.publish(topic, message, MQTT_RETAIN);
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Sending %s => %s\n"), topic, message);
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Sending %s => %s\n"), topic, message);
+
 #endif
         return true;
     }
@@ -144,10 +138,7 @@ void mqtt_o::_mqttConnect()
 
     if (host.length() == 0)
     {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] No Ip Set \n"));
-
-#endif
+        OZ_LOG_W_P(PSTR("[MQTT] No Ip Set \n"));
         return;
     }
 
@@ -165,9 +156,8 @@ void mqtt_o::_mqttConnect()
     //_mqtt.setWill(MQTT_WILL, MQTT_QoS, MQTT_RETAIN, "0");
     if ((strlen(_mqtt_user.c_str()) > 0) && (strlen(_mqtt_pass.c_str()) > 0))
     {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Connecting as user %s\n"), _mqtt_user.c_str());
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Connecting as user %s\n"), _mqtt_user.c_str());
+
         _mqtt.setCredentials(_mqtt_user.c_str(), _mqtt_pass.c_str());
     }
 
@@ -181,15 +171,11 @@ void mqtt_o::_mqttConnect()
 
     _mqtt.setServer(host.c_str(), port);
 
-#ifdef DEBUG_LOG
-    DEBUG_MSG_P(PSTR("[MQTT] TRY TO CONNECT Ip %s port %d  User %s Passw %s\n"), host.c_str(), port, _mqtt_user.c_str(), _mqtt_pass.c_str());
-#endif
+    OZ_LOG_I_P(PSTR("[MQTT] TRY TO CONNECT Ip %s port %d  User %s Passw %s\n"), host.c_str(), port, _mqtt_user.c_str(), _mqtt_pass.c_str());
 
     if ((strlen(_mqtt_user.c_str()) > 0) && (strlen(_mqtt_pass.c_str()) > 0))
     {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Connecting as user %s\n"), _mqtt_user.c_str());
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Connecting as user %s\n"), _mqtt_user.c_str());
 
         //               connect(const char *id, const char *user, const char *pass, const char* willTopic, uint8_t willQos, boolean willRetain, const char* willMessage)
         response = _mqtt.connect(_mqtt_clientid.c_str(), _mqtt_user.c_str(), _mqtt_pass.c_str(), _availability_topic().c_str(), MQTT_QoS, MQTT_RETAIN, MQTT_WILL);
@@ -206,9 +192,7 @@ void mqtt_o::_mqttConnect()
     }
     else
     {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Connection failed\n"));
-#endif
+        OZ_LOG_W_P(PSTR("[MQTT] Connection failed\n"));
     }
 
 #endif // end MQTT_USE_ASYNC
@@ -216,29 +200,25 @@ void mqtt_o::_mqttConnect()
 
 void mqtt_o::_mqttOnDisconnect()
 {
-#ifdef DEBUG_LOG
-    DEBUG_MSG_P(PSTR("[MQTT] Disconnected!\n"));
-#endif
+    OZ_LOG_I_P(PSTR("[MQTT] Disconnected!\n"));
 
     //  Try To solve problem
     //  [E][WiFiClient.cpp:74] connect(): lwip_connect_r: 113
     //
-    //  Code is fine, error 113 is ECONNABORTED (Connection aborted). 
-    //  Try flushing the client or reading all available data. 
+    //  Code is fine, error 113 is ECONNABORTED (Connection aborted).
+    //  Try flushing the client or reading all available data.
     //  client.readStringUntil('\r'); does not read it all
 
     //_mqtt_client.readStringUntil('\r');
     _mqtt_client.flush();
 
     // END try
-
 }
 
 void mqtt_o::_mqttOnConnect()
 {
-#ifdef DEBUG_LOG
-    DEBUG_MSG_P(PSTR("[MQTT] Connected!\n"));
-#endif
+    OZ_LOG_I_P(PSTR("[MQTT] Connected!\n"));
+
     _mqtt_is_connected = true;
     _mqtt_reconnect_delay = MQTT_RECONNECT_DELAY_MIN;
 
@@ -256,14 +236,12 @@ void mqtt_o::_mqttSubscribe(const char *topic)
     {
 #ifdef MQTT_USE_ASYNC
         unsigned int packetId = _mqtt.subscribe(topic, MQTT_QoS);
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Subscribing to %s (PID %d)\n"), topic, packetId);
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Subscribing to %s (PID %d)\n"), topic, packetId);
+
 #else
         _mqtt.subscribe(topic, MQTT_QoS);
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[MQTT] Subscribing to %s\n"), topic);
-#endif
+        OZ_LOG_I_P(PSTR("[MQTT] Subscribing to %s\n"), topic);
+
 #endif
     }
 }

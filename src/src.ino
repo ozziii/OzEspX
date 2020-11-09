@@ -38,11 +38,7 @@ void callback(char *p_topic, char *p_payload, size_t p_length)
 /* Setting Up */
 void setup()
 {
-
-#ifdef DEBUG
-  debug::debugBegin();
-#endif
-
+  OZ_LOG_BEGIN();
   // Initialize EEPROM setting string
   Setting.begin();
 

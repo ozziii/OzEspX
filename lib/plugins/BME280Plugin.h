@@ -44,25 +44,21 @@ public:
 
       if (!this->_sensor->begin())
       {
-#ifdef DEBUG_ERROR
-        DEBUG_MSG_P(PSTR("[BME280][%s][ERROR] NO SENSOR FOUND \n"), name.c_str());
-#endif
+        OZ_LOG_E_P(PSTR("[BME280][%s][ERROR] NO SENSOR FOUND \n"), name.c_str());
+
         return;
       }
 
       initialized = true;
 
-#ifdef DEBUG_LOG
-      DEBUG_MSG_P(PSTR("[BME280][%s] IS INITIALZED DELAY %d \n"), name.c_str(), sensor_delay);
+      OZ_LOG_I_P(PSTR("[BME280][%s] IS INITIALZED DELAY %d \n"), name.c_str(), sensor_delay);
     }
     else
     {
 
-      DEBUG_MSG_P(PSTR("[BME280][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+      OZ_LOG_E_P(PSTR("[BME280][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
     }
   }
-
 
   void execute_sensor() override
   {
@@ -104,9 +100,7 @@ public:
     }
     delete[] c_temp;
 
-#ifdef DEBUG_INFO
-    DEBUG_MSG_P(PSTR("[BME280][%s] READING DONE \n"), name.c_str());
-#endif
+    OZ_LOG_I_P(PSTR("[BME280][%s] READING DONE \n"), name.c_str());
   }
 
   static const char *ClassName() { return "BME280"; }

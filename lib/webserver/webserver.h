@@ -20,12 +20,14 @@ static AsyncWebServer *_server;
 
 static OnWebMqttCallback _Web_callback;
 
+#ifdef WEB_SECURE
 static bool webAuthenticate(AsyncWebServerRequest *request)
 {
     String UserName = SETTING("WEBUSER");
     String Password = SETTING("WEBPASS");
     return request->authenticate(UserName.c_str(), Password.c_str());
 }
+#endif
 
 static void _onHome(AsyncWebServerRequest *request)
 {
@@ -97,7 +99,7 @@ static void _onInitDb(AsyncWebServerRequest *request)
 }
 
 static ticker_o web_reboot_tiker;
-void static web_reboot_tiker_task(){ ESP.restart(); }
+void static web_reboot_tiker_task() { ESP.restart(); }
 
 static void _onReset(AsyncWebServerRequest *request)
 {
@@ -109,7 +111,7 @@ static void _onReset(AsyncWebServerRequest *request)
     }
 #endif
     request->send(404);
-    web_reboot_tiker.once(2,web_reboot_tiker_task);
+    web_reboot_tiker.once(2, web_reboot_tiker_task);
 }
 
 static void _onUnlock(AsyncWebServerRequest *request)
@@ -167,7 +169,7 @@ static void _onOTA_POST(AsyncWebServerRequest *request, const String &filename, 
         return request->requestAuthentication(SETTING("espname").c_str());
     }
 #endif
-    WebOtaUpload(request,filename, index,data,len,final);
+    WebOtaUpload(request, filename, index, data, len, final);
 }
 #endif
 
@@ -218,17 +220,14 @@ public:
         _server->on(COMMAND_DEBUG_JSON, HTTP_GET, _onDebugJson);
 #endif
 
-
 #ifdef OTA // OTA UPDATE COMMAND
         _server->on(COMMAND_OTA_UPDATYE, HTTP_GET, _onOTA_GET);
-        _server->on(COMMAND_OTA_UPDATYE, HTTP_POST, _onOTA_POST_END,_onOTA_POST);
+        _server->on(COMMAND_OTA_UPDATYE, HTTP_POST, _onOTA_POST_END, _onOTA_POST);
 #endif
 
         _server->begin();
 
-#ifdef DEBUG_LOG
-        DEBUG_MSG("[WEBSERVER] Webserver running on port %u \n", port);
-#endif
+        OZ_LOG_I_P(PSTR("[WEBSERVER] Webserver running on port %u \n"), port);
     }
 
     void begin(OnWebMqttCallback callback)

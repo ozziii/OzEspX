@@ -44,15 +44,11 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[JSN][%s] IS INITIALZED  \n"), name.c_str());
-#endif
+            OZ_LOG_I_P(PSTR("[JSN][%s] IS INITIALZED  \n"), name.c_str());
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[JSN][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[JSN][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -79,14 +75,11 @@ class JSNSR04TV2 : public plugin_base, public plugin_sensor
             {
                 distance += value;
             }
-#ifdef DEBUG_INFO
-            DEBUG_MSG_P(PSTR("[JSN][%s] READ VALUE %d at i : %d \n"), name.c_str(), value, i);
-#endif
+            OZ_LOG_V_P(PSTR("[JSN][%s] READ VALUE %d at i : %d \n"), name.c_str(), value, i);
             i++;
         }
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P(PSTR("[JSN][%s] DITANCE IS %d mm \n"), name.c_str(), distance);
-#endif
+
+        OZ_LOG_I_P(PSTR("[JSN][%s] DITANCE IS %d mm \n"), name.c_str(), distance);
 
     }
 

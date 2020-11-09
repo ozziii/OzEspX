@@ -28,15 +28,11 @@ class FreeRAMPlugin : public plugin_base, public plugin_sensor
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[FREE-RAM][%s] IS INITIALZED DELAY %d \n"), name.c_str(), sensor_delay);
-#endif
+            OZ_LOG_I_P(PSTR("[FREE-RAM][%s] IS INITIALZED DELAY %d \n"), name.c_str(), sensor_delay);
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[FREE-RAM][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[FREE-RAM][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -45,9 +41,7 @@ class FreeRAMPlugin : public plugin_base, public plugin_sensor
         char freeRam[10];
         sprintf(freeRam, "%i", ESP.getFreeHeap());
         Network.send(topic_freeram.c_str(), freeRam);
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P(PSTR("[FREE-RAM][%s] SEND %s \n"), name.c_str(), freeRam);
-#endif
+        OZ_LOG_V_P(PSTR("[FREE-RAM][%s] SEND %s \n"), name.c_str(), freeRam);
     }
 
     static const char* ClassName() { return "FREE_RAM";}

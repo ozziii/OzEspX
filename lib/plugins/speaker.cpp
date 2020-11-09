@@ -3,6 +3,8 @@
 #ifdef PLUGIN_SPEAKER
 #include "freertos/ringbuf.h"
 
+static size_t tas_default_count = Size(Default);
+
 static volatile bool speaker_running = false;
 
 WiFiUDP _speaker_udp_object;
@@ -83,8 +85,8 @@ speaker::speaker(const char *init)
 
         this->initialized = true;
 
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[SPEAKER][%s] IS INITIALZED BCK: %d  RLC: %d DIN: %d  \n"),
+
+        OZ_LOG_I_P(PSTR("[SPEAKER][%s] IS INITIALZED BCK: %d  RLC: %d DIN: %d  \n"),
                     this->name.c_str(),
                     _bck_pin,
                     _rlc_pin,
@@ -102,9 +104,7 @@ speaker::speaker(const char *init)
     }
     else
     {
-
-        DEBUG_MSG_P(PSTR("[SPEAKER][ERROR] WRONG INITIALZE STRING \n"));
-#endif
+        OZ_LOG_E_P(PSTR("[SPEAKER][ERROR] WRONG INITIALZE STRING \n"));
     }
 }
 

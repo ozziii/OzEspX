@@ -45,9 +45,7 @@ class led_plugin : public plugin_base, public plugin_response
                 }
                 else
                 {
-#ifdef DEBUG_ERROR
-                    DEBUG_MSG_P(PSTR("[LED][%s][ERROR] INITIALZATION ERROR WRONG RGB PIN \n"), name.c_str());
-#endif
+                    OZ_LOG_E_P(PSTR("[LED][%s][ERROR] INITIALZATION ERROR WRONG RGB PIN \n"), name.c_str());
                     initialized = false;
                     return;
                 }
@@ -107,18 +105,14 @@ class led_plugin : public plugin_base, public plugin_response
         if (initialized)
         {
             update_lamp();
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[LED][%s] INITIALZATION OK \n"), name.c_str());
-            DEBUG_MSG_P(PSTR("[LED][%s] STATE %s \n"), name.c_str(), topic_state.c_str());
-            DEBUG_MSG_P(PSTR("[LED][%s] BRIGH %s \n"), name.c_str(), topic_brightness_state.c_str());
-            DEBUG_MSG_P(PSTR("[LED][%s] RBG %s \n"), name.c_str(), topic_rgb_state.c_str());
-#endif
+            OZ_LOG_I_P(PSTR("[LED][%s] INITIALZATION OK \n"), name.c_str());
+            OZ_LOG_I_P(PSTR("[LED][%s] STATE %s \n"), name.c_str(), topic_state.c_str());
+            OZ_LOG_I_P(PSTR("[LED][%s] BRIGH %s \n"), name.c_str(), topic_brightness_state.c_str());
+            OZ_LOG_I_P(PSTR("[LED][%s] RBG %s \n"), name.c_str(), topic_rgb_state.c_str());
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[LED][%s][ERROR] INITIALZATION ERROR \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[LED][%s][ERROR] INITIALZATION ERROR \n"), name.c_str());
         }
     }
 

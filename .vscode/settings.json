@@ -51,7 +51,8 @@
         "typeinfo": "cpp",
         "string": "cpp",
         "unordered_set": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "iostream": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

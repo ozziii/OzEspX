@@ -4,7 +4,7 @@
 #include "plugin_base.h"
 #include "plugin_response.h"
 
-#define BELL_COMMA_SEPARATOR_CHAR  44 
+#define BELL_COMMA_SEPARATOR_CHAR 44
 
 /******************************************************************************************************************************************
 *            
@@ -56,7 +56,6 @@ public:
                 IO.writeDigital(this->_action_pin, LOW);
             }
 
-
             // MQTT CONFIGURATION
             topic_state = buildTopic(MQTT_COMMAND_STATE);
 
@@ -65,18 +64,12 @@ public:
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[BELL][%s] CREATE (ACTION PIN: %d) \n"), name.c_str(), _action_pin);
-#endif  
-#ifdef DEBUG_INFO   
-            DEBUG_MSG_P(PSTR("[BELL][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
-#endif
+            OZ_LOG_I_P(PSTR("[BELL][%s] CREATE (ACTION PIN: %d) \n"), name.c_str(), _action_pin);
+            OZ_LOG_I_P(PSTR("[BELL][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[BELL][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[BELL][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -105,30 +98,28 @@ public:
             std::vector<String> command = splitString(Message.c_str(), BELL_COMMA_SEPARATOR_CHAR);
             if (command.size() == 3)
             {
-                uint8_t run   = atoi(command[0].c_str());
-                uint8_t stop  = atoi(command[1].c_str());
+                uint8_t run = atoi(command[0].c_str());
+                uint8_t stop = atoi(command[1].c_str());
                 uint8_t times = atoi(command[2].c_str());
 
-                if(run > 0 && stop > 0 && times > 0)
+                if (run > 0 && stop > 0 && times > 0)
                 {
-#ifdef DEBUG_INFO
-                    DEBUG_MSG_P("[BELL][INFO] Begin times: %d | stop: %d | run: %d | pin: %d \n",times,stop,run,_action_pin);
-#endif
-                    uint32_t  parameter = (times << 24) + (stop << 16) + (run << 8) + this->_action_pin;
+                    OZ_LOG_I_P(PSTR("[BELL][INFO] Begin times: %d | stop: %d | run: %d | pin: %d \n"), times, stop, run, _action_pin);
 
-                    this->bell_task.once_ms(10, run_bell,parameter);
+                    uint32_t parameter = (times << 24) + (stop << 16) + (run << 8) + this->_action_pin;
+
+                    this->bell_task.once_ms(10, run_bell, parameter);
                 }
                 return true;
             }
 
             uint8_t seconds = atoi(Message.c_str());
-            if(seconds > 0)
+            if (seconds > 0)
             {
-                uint32_t  parameter = (1 << 24) + (0 << 16) + (seconds << 8) + this->_action_pin;
+                uint32_t parameter = (1 << 24) + (0 << 16) + (seconds << 8) + this->_action_pin;
 
                 this->bell_task.once_ms(10, run_bell, parameter);
             }
-
 
             return true;
         }
@@ -154,27 +145,25 @@ private:
 
     ticker_o bell_task;
 
-
-
     static void run_bell(uint32_t command)
     {
-        uint8_t * vp = (uint8_t *)&command;
+        uint8_t *vp = (uint8_t *)&command;
 
-        uint8_t times      = vp[3];
-        uint8_t stop       = vp[2]; 
-        uint8_t run        = vp[1]; 
+        uint8_t times = vp[3];
+        uint8_t stop = vp[2];
+        uint8_t run = vp[1];
         uint8_t action_pin = vp[0];
 
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P("[BELL][INFO]  times: %d | stop: %d | run: %d | pin: %d \n",times,stop,run,action_pin);
-#endif
 
-        for(int i=0 ; i < times ; i ++)
+        OZ_LOG_V_P(PSTR("[BELL][INFO]  times: %d | stop: %d | run: %d | pin: %d \n"), times, stop, run, action_pin);
+
+
+        for (int i = 0; i < times; i++)
         {
             IO.switcDigital(action_pin);
-            delay(run*10);
+            delay(run * 10);
             IO.switcDigital(action_pin);
-            delay(stop*10);
+            delay(stop * 10);
         }
     }
 };

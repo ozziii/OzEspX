@@ -32,9 +32,9 @@ static void InterruptTask(void *parameter)
     {
         // BLOCKING FUNCTION: WAIT FOR INTERRUP
         int8_t interruptPin = Interrupts.Get();
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P(PSTR("[EXEC] INTERRUPS PIN ( %d ) \n"), interruptPin);
-#endif
+
+        OZ_LOG_V_P(PSTR("[EXEC] INTERRUPS PIN ( %d ) \n"), interruptPin);
+
         for (uint8_t i = 0; i < _interrups.size(); i++)
         {
             if (_interrups[i]->Interrupt(interruptPin))
@@ -94,10 +94,8 @@ class executor
             NULL);                       /* Task handle. */
 
 #endif
+        OZ_LOG_I_P(PSTR("[EXEC][BEGIN] CREATE  %d INTERRUPS,  %d RESPONSER, %d SENSOR  \n"), _interrups.size(), _responses.size(), _tiker_sensors.size());
 
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[EXEC][BEGIN] CREATE  %d INTERRUPS,  %d RESPONSER, %d SENSOR  \n"), _interrups.size(), _responses.size(), _tiker_sensors.size());
-#endif
     }
 
     void loop()
@@ -106,9 +104,9 @@ class executor
 #ifndef ESP32
         for (int8_t interruptPin = Interrupts.Get(); interruptPin >= 0; interruptPin = Interrupts.Get())
         {
-#ifdef DEBUG_INFO
-            DEBUG_MSG_P(PSTR("[EXEC] INTERRUPS PIN ( %d ) \n"), interruptPin);
-#endif
+
+            OZ_LOG_V_P(PSTR("[EXEC] INTERRUPS PIN ( %d ) \n"), interruptPin);
+
             for (uint8_t i = 0; i < _interrups.size(); i++)
             {
                 if (_interrups[i]->Interrupt(interruptPin))
@@ -122,9 +120,9 @@ class executor
 
     void mqttrecive(const char *topic, const char *message)
     {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[EXEC] ARRIVE MQTT TOPIC (%s) MESSAGE (%s) \n"), topic, message);
-#endif
+
+        OZ_LOG_I_P(PSTR("[EXEC] ARRIVE MQTT TOPIC (%s) MESSAGE (%s) \n"), topic, message);
+
         for (uint8_t i = 0; i < _responses.size(); i++)
         {
 #ifdef SIGLE_ACTION_PER_PLUGIN

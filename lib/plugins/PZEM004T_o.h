@@ -57,9 +57,7 @@ public:
                 device = new PZEM004T(_serial);
 #endif
 
-#ifdef DEBUG_LOG
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s] USE HARDWARE SERIAL PORT NUMBER %d \n"), name.c_str(), uart_nr);
-#endif
+                OZ_LOG_I_P(PSTR("[PZEM004T][%s] USE HARDWARE SERIAL PORT NUMBER %d \n"), name.c_str(), uart_nr);
             }
             else
             {
@@ -67,9 +65,9 @@ public:
                 unsigned int TxPin = atoi(serial_split[0].c_str());
                 unsigned int RxPin = atoi(serial_split[1].c_str());
                 device = new PZEM004T(pins::convertPin(RxPin), pins::convertPin(TxPin));
-#ifdef DEBUG_LOG
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s] CREATE SOFTWARE SERIAL Tx: %d, Rx: %d \n"), name.c_str(), TxPin, RxPin);
-#endif
+
+                OZ_LOG_I_P(PSTR("[PZEM004T][%s] CREATE SOFTWARE SERIAL Tx: %d, Rx: %d \n"), name.c_str(), TxPin, RxPin);
+
                 */
             }
 
@@ -79,16 +77,13 @@ public:
             {
                 try_time++;
                 delay(1000);
-#ifdef DEBUG_ERROR
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s][ERROR] TRY TO CONNECT %d   \n"), name.c_str(), try_time);
-#endif
+                OZ_LOG_W_P(PSTR("[PZEM004T][%s][ERROR] TRY TO CONNECT %d   \n"), name.c_str(), try_time);
+
             }
 
             if (try_time == 10)
             {
-#ifdef DEBUG_ERROR
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s][ERROR] UNABLE TO CONNECT TO SERIAL \n"), name.c_str());
-#endif
+                OZ_LOG_E_P(PSTR("[PZEM004T][%s][ERROR] UNABLE TO CONNECT TO SERIAL \n"), name.c_str());
             }
             else
             {
@@ -107,16 +102,13 @@ public:
 
                 initialized = true;
 
-#ifdef DEBUG_LOG
-                DEBUG_MSG_P(PSTR("[PZEM004T][%s] IS INITIALZED DELAY %d \n"), name.c_str(), sensor_delay);
-#endif
+                OZ_LOG_I_P(PSTR("[PZEM004T][%s] IS INITIALZED DELAY %d \n"), name.c_str(), sensor_delay);
+
             }
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[PZEM004T][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[PZEM004T][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 

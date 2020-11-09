@@ -7,7 +7,7 @@
 #ifdef ESP32
 #else
 #include <vector>
-#endif
+#endif  
 
 #include <pins.h>
 
@@ -278,9 +278,7 @@ static void SetTouchInterrups(uint8_t pin, uint16_t threshold)
         touchAttachInterrupt(pin, OnInterrupt_32, threshold);
         break;  
     default:
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[PINS][ERROR] %d IS NOT VALID PIN FOR TOUCH \n"), pin);
-#endif
+        OZ_LOG_E_P(PSTR("[PINS][ERROR] %d IS NOT VALID PIN FOR TOUCH \n"), pin);
         break;
 
     }

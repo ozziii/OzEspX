@@ -104,16 +104,12 @@ public:
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[SWITCH][%s] CREATE (ACTION PIN: %d) (READ PIN: %d) \n"), name.c_str(), _action_pin, _read_pin);
-            DEBUG_MSG_P(PSTR("[SWITCH][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
-#endif
+            OZ_LOG_I_P(PSTR("[SWITCH][%s] CREATE (ACTION PIN: %d) (READ PIN: %d) \n"), name.c_str(), _action_pin, _read_pin);
+            OZ_LOG_I_P(PSTR("[SWITCH][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[RELAY][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[RELAY][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -175,9 +171,7 @@ public:
             Network.send(topic_state.c_str(), str_state);
         }
 
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P(PSTR("[RELAY][%s] SEND STATE ( %s ) value %s \n"), name.c_str(), topic_state.c_str(), state);
-#endif
+        OZ_LOG_I_P(PSTR("[RELAY][%s] SEND STATE ( %s ) value %s \n"), name.c_str(), topic_state.c_str(), state);
     }
 
     uint8_t _action_pin;

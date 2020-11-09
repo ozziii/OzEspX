@@ -25,20 +25,18 @@
 
 #ifdef DEBUG
 
-
-#define DEBUG_LOG
-#define DEBUG_INFO
 #define DEBUG_ERROR
+#define DEBUG_WARNING
+#define DEBUG_INFO
+//#define DEBUG_VERBOSE
 
-
-//#define DEBUG_ADD_TIMESTAMP
 
 #define DEBUG_WEB_SUPPORT
+
 
 #ifdef DEBUG_WEB_SUPPORT
 #define MAX_DEBUG_LIST 30
 #endif
-
 
 
 
@@ -246,7 +244,7 @@
 #define PLUGIN_SPEAKER
 //#define PLUGIN_I2S2UDP
 //#define PLUGIN_VMC
-
+#define PLUGIN_LORATOMQTT
 
 /*===========================================================================
 * ============================= DISPLAY ====================================
@@ -276,31 +274,6 @@
 #endif
 
 #ifdef PLUGIN_SPEAKER
-
-
-/***************************************************************
- *     /\
- *     |
- * MAX |-----------------------------*
- *     |                           * '
- *     |                         *   '
- *     |                       *     '
- *     |                     *       '
- *     |                   *         '
- *  1  |-----------------*           '
- *     |             *   '           '
- *     |          *      '           '
- *     |       *         '           '
- * 0--------*------------------------------------->
- *     | LOW_GAIN     MID_GAIN    MAX_GAIN
- *     | 
- * 
- *    [from LOW_GAIN to MID_GAIN]  Y = A1 x + B1
- * 
- *    [from MID_GAIN to MAX_GAIN]  Y = A2 x + B2
- * 
- * 
- * ***************************************************************/
 
 #define SPEAKER_PLUGIN_TOP_GAIN        255
 #define SPEAKER_PLUGIN_LOW_GAIN        0

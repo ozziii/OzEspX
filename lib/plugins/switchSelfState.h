@@ -65,18 +65,15 @@ class switchSelfState : public plugin_base, public plugin_response, public plugi
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[SWITCH][%s] CREATE!! (ACTION PIN: %d)\n"), name.c_str(), _action_pin);
-#endif
-#ifdef DEBUG_INFO
-            DEBUG_MSG_P(PSTR("[SWITCH][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
-#endif
+
+            OZ_LOG_I_P(PSTR("[SWITCH][%s] CREATE!! (ACTION PIN: %d)\n"), name.c_str(), _action_pin);
+
+            OZ_LOG_V_P(PSTR("[SWITCH][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
+
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[RELAY][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[RELAY][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 

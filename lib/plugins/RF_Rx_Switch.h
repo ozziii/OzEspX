@@ -27,27 +27,22 @@ static unsigned long rf_rx_switch_interval = 1000;
 
 static void recive_rf(int rf_key)
 {
-#ifdef DEBUG_INFO
-    DEBUG_MSG_P("[RF] recive key %d \n", rf_key);
-#endif
+
+    OZ_LOG_I_P(PSTR("[RF] recive key %d \n"), rf_key);
     if (rf_key == rf_rx_enambleKey)
     {
-        if( millis() > rf_rx_last_trigger +  rf_rx_switch_interval )
+        if (millis() > rf_rx_last_trigger + rf_rx_switch_interval)
         {
-#ifdef DEBUG_INFO
-        DEBUG_MSG("[RF] key is valid \n");
-#endif
+            OZ_LOG_I_P(PSTR("[RF] key is valid \n"));
             IO.pumpDigital(rf_rx_switch_pin, RF_SWITCH_PUMP_RELAY);
             rf_rx_last_trigger = millis();
         }
-
     }
 }
 
-
 class rf_rx_switch : public plugin_base, public plugin_response
 {
-  public:
+public:
     rf_rx_switch(const char *init)
     {
         std::vector<String> config = splitString(init, PLUGIN_INIT_SEPARATOR_CHAR);
@@ -60,25 +55,23 @@ class rf_rx_switch : public plugin_base, public plugin_response
             bool relaylogic = atoi(config[4].c_str());
             rf_rx_enambleKey = atoi(config[5].c_str());
 
-            pins::setMode(rf_rx_switch_pin,OUTPUT_MODE);
-            
-            if(relaylogic)
-                pins::writeDigital(rf_rx_switch_pin,HIGH);
+            pins::setMode(rf_rx_switch_pin, OUTPUT_MODE);
+
+            if (relaylogic)
+                pins::writeDigital(rf_rx_switch_pin, HIGH);
             else
-                pins::writeDigital(rf_rx_switch_pin,LOW);
+                pins::writeDigital(rf_rx_switch_pin, LOW);
 
             mx_rm_5v.enableReceive(pins::convertPin(rf_pin), recive_rf);
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[RF][%s] CREATE (Sensor pin: %d) (action pin: %d) \n"), name.c_str(), rf_pin, rf_rx_switch_pin);
-            DEBUG_MSG_P(PSTR("[RF][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), "null");
+            OZ_LOG_I_P(PSTR("[RF][%s] CREATE (Sensor pin: %d) (action pin: %d) \n"), name.c_str(), rf_pin, rf_rx_switch_pin);
+            OZ_LOG_I_P(PSTR("[RF][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), "null");
         }
         else
         {
-            DEBUG_MSG_P(PSTR("[RF][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[RF][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -87,9 +80,9 @@ class rf_rx_switch : public plugin_base, public plugin_response
         return false;
     }
 
-    static const char* ClassName() { return "RF_Rx_Switch";}
+    static const char *ClassName() { return "RF_Rx_Switch"; }
 
-  private:
+private:
     RCSwitch mx_rm_5v = RCSwitch();
     uint8_t rf_pin;
 };

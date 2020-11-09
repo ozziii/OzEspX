@@ -37,15 +37,11 @@ class DHT22Plugin : public plugin_base, public plugin_sensor
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[DHT22][%s] IS INITIALZED PIN: %d  DELAY %d \n"), name.c_str(), _pin, sensor_delay);
-#endif
+            OZ_LOG_I_P(PSTR("[DHT22][%s] IS INITIALZED PIN: %d  DELAY %d \n"), name.c_str(), _pin, sensor_delay);
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[DHT22][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[DHT22][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -54,9 +50,7 @@ class DHT22Plugin : public plugin_base, public plugin_sensor
         newValues = dht.getTempAndHumidity();
         if (dht.getStatus() != 0)
         {
-#ifdef DEBUG_INFO
-            DEBUG_MSG_P(PSTR("[DHT22][%s] ERROR MESSAGE ( %s ) \n"), name.c_str(), dht.getStatusString());
-#endif
+            OZ_LOG_E_P(PSTR("[DHT22][%s] ERROR MESSAGE ( %s ) \n"), name.c_str(), dht.getStatusString());
             return;
         }
 
@@ -69,10 +63,8 @@ class DHT22Plugin : public plugin_base, public plugin_sensor
         Network.send(topic_temperature.c_str(), b_temp);
         Network.send(topic_humidity.c_str(), b_humi);
 
-#ifdef DEBUG_INFO
-        DEBUG_MSG_P(PSTR("[DHT22][%s] SEND TEM: %s HUM: %s  \n"), name.c_str(), b_temp, b_humi);
-#endif
-
+        OZ_LOG_V_P(PSTR("[DHT22][%s] SEND TEM: %s HUM: %s  \n"), name.c_str(), b_temp, b_humi);
+        
         delete[] b_humi;
         delete[] b_temp;
     }

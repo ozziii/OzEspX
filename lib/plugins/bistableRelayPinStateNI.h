@@ -105,16 +105,14 @@ class bistableRelayPinStateNI : public plugin_base, public plugin_response, publ
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[B.R.P.S.N.I.][%s] CREATE (ACTION PIN: %d) (READ PIN: %d) \n"), name.c_str(), _action_pin, _read_pin);
-            DEBUG_MSG_P(PSTR("[B.R.P.S.N.I.][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
-#endif
+
+            OZ_LOG_I_P(PSTR("[B.R.P.S.N.I.][%s] CREATE (ACTION PIN: %d) (READ PIN: %d) \n"), name.c_str(), _action_pin, _read_pin);
+            OZ_LOG_I_P(PSTR("[B.R.P.S.N.I.][%s] SUBSCRIBE TO (%s) \n"), name.c_str(), topic_action.c_str());
+
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[B.R.P.S.N.I.][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[B.R.P.S.N.I.][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 
@@ -155,16 +153,12 @@ class bistableRelayPinStateNI : public plugin_base, public plugin_response, publ
             this->current_state = bstate;
             const char *state = bstate == _read_logic_ON ? MQTT_STATE_ON : MQTT_STATE_OFF;
             Network.send(topic_state.c_str(), state);
-#ifdef DEBUG_INFO
-            DEBUG_MSG_P(PSTR("[B.R.P.S.N.I.][%s] STATE HAS CHANGED CURRENT %s \n"), name.c_str(), state);
-            DEBUG_MSG_P(PSTR("[B.R.P.S.N.I.][%s] SEND ( %s ) value %s \n"), name.c_str(), topic_state.c_str(), state);
-#endif
+            OZ_LOG_V_P(PSTR("[B.R.P.S.N.I.][%s] STATE HAS CHANGED CURRENT %s \n"), name.c_str(), state);
+            OZ_LOG_V_P(PSTR("[B.R.P.S.N.I.][%s] SEND ( %s ) value %s \n"), name.c_str(), topic_state.c_str(), state);
         }
         else
         {
-#ifdef DEBUG_INFO
-            DEBUG_MSG_P(PSTR("[B.R.P.S.N.I.][%s] NO STATE CHANGED \n"), name.c_str());
-#endif
+            OZ_LOG_V_P(PSTR("[B.R.P.S.N.I.][%s] NO STATE CHANGED \n"), name.c_str());
         }
     }
 

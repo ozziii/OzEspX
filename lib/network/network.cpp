@@ -15,7 +15,6 @@ void network::loop()
     {
         mqtt_o::mqttLoop();
     }
- 
 }
 
 void network::subscribe(const char *topic)

@@ -15,33 +15,31 @@
 #ifdef STABILITY_CHECK_ENABLE
 static void stability_ticker_function()
 {
-    EEPROM.write(STABILITY_INDEX,0);
-    EEPROM.commit(); 
-#ifdef DEBUG_LOG
-    DEBUG_MSG("[SYSTEM] STABILITY CHECK PASSED!! \n");
-#endif
+    EEPROM.write(STABILITY_INDEX, 0);
+    EEPROM.commit();
+    OZ_LOG_I_P(PSTR("[SYSTEM] STABILITY CHECK PASSED!! \n"));
 }
 #endif
 
 class system_o
 {
-  public:
+public:
     system_o() {}
 
     void begin()
     {
-        uint8_t start_time = EEPROM.read(START_COUNT_INDEX); 
+        uint8_t start_time = EEPROM.read(START_COUNT_INDEX);
         start_time++;
-        EEPROM.write(START_COUNT_INDEX,start_time);
-        EEPROM.commit(); 
+        EEPROM.write(START_COUNT_INDEX, start_time);
+        EEPROM.commit();
 
         //analogWriteFreq(100);
 
 #ifdef STABILITY_CHECK_ENABLE
         uint8_t crash_count = EEPROM.read(STABILITY_INDEX);
         crash_count++;
-        EEPROM.write(STABILITY_INDEX,crash_count);
-        EEPROM.commit(); 
+        EEPROM.write(STABILITY_INDEX, crash_count);
+        EEPROM.commit();
 #endif
 
 #ifdef DYNAMIC_FREQUENCY_SCALING
@@ -65,26 +63,21 @@ class system_o
         uint8_t crash_count = EEPROM.read(STABILITY_INDEX);
         if (crash_count > MAX_CRASH_COUNT)
         {
-#ifdef DEBUG_LOG
-            DEBUG_MSG("[SYSTEM] SYSTEM IS UNSTABLE \n");
-#endif
+            OZ_LOG_W_P(PSTR("[SYSTEM] SYSTEM IS UNSTABLE \n"));
             return false;
         }
         else
         {
             stability_ticker.once(STABILITY_CHECK_TIME_S, stability_ticker_function);
-#ifdef DEBUG_LOG
-            DEBUG_MSG("[SYSTEM] START STABILITY CHECK \n");
-#endif
+            OZ_LOG_I_P(PSTR("[SYSTEM] START STABILITY CHECK \n"));
             return true;
         }
 #else
         return true;
 #endif
-
     }
 
-  private:
+private:
     ticker_o stability_ticker;
 };
 

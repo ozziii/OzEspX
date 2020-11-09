@@ -33,10 +33,6 @@ static void i2s_tx_task(void *arg)
     uint16_t r_temp = 0;
     uint16_t l_temp = 0;
 
-#ifdef DEBUG_INFO
-    uint count = 1;
-#endif
-
     while (true)
     {
         i2s_read(I2S2UDP_PLUGIN_I2S_PORT, buf_ptr_read, I2S2UDP_BUFFER_LENGTH, &bytes_read, portMAX_DELAY);
@@ -81,9 +77,7 @@ i2s2udp::i2s2udp(const char *init)
 
     if (!this->multiacst_address.fromString(SPEAKER_PLUGIN_MULTICAST_IP))
     {
-#ifdef DEBUG_ERROR
-        DEBUG_MSG_P(PSTR("[i2s2Udp][ERROR] WRONG IP ADDRESS \n"));
-#endif
+        OZ_LOG_E_P(PSTR("[i2s2Udp][ERROR] WRONG IP ADDRESS \n"));
         return;
     }
 
@@ -100,19 +94,15 @@ i2s2udp::i2s2udp(const char *init)
 
         this->initialized = true;
 
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[i2s2Udp][%s] IS INITIALZED BCK: %d  RLC: %d DIN: %d  \n"),
-                    this->name.c_str(),
-                    _bck_pin,
-                    _rlc_pin,
-                    _din_pin);
-#endif
+        OZ_LOG_I_P(PSTR("[i2s2Udp][%s] IS INITIALZED BCK: %d  RLC: %d DIN: %d  \n"),
+                   this->name.c_str(),
+                   _bck_pin,
+                   _rlc_pin,
+                   _din_pin);
     }
     else
     {
-#ifdef DEBUG_ERROR
-        DEBUG_MSG_P(PSTR("[i2s2Udp][%s][ERROR] WRONG INITIALZE STRING \n"), this->name.c_str());
-#endif
+        OZ_LOG_E_P(PSTR("[i2s2Udp][%s][ERROR] WRONG INITIALZE STRING \n"), this->name.c_str());
     }
 }
 
@@ -221,9 +211,7 @@ void i2s2udp::init_i2s()
 
     i2s_set_pin(I2S2UDP_PLUGIN_I2S_PORT, &pin_config_rx);
 
-#ifdef DEBUG_INFO
-    DEBUG_MSG_P(PSTR("[i2s2Udp][INFO] I2S INITAILIZED \n"));
-#endif
+    OZ_LOG_V_P(PSTR("[i2s2Udp][INFO] I2S INITAILIZED \n"));
 
     this->_i2s_init = true;
 }
@@ -236,9 +224,7 @@ void i2s2udp::stop_i2s()
     i2s_stop(I2S2UDP_PLUGIN_I2S_PORT);
     i2s_driver_uninstall(I2S2UDP_PLUGIN_I2S_PORT);
 
-#ifdef DEBUG_INFO
-    DEBUG_MSG_P(PSTR("[i2s2Udp][INFO] I2S UNISTALL \n"));
-#endif
+    OZ_LOG_V_P(PSTR("[i2s2Udp][INFO] I2S UNISTALL \n"));
 
     this->_i2s_init = false;
 }

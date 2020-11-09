@@ -21,7 +21,7 @@
 
 class plugin_base
 {
-  public:
+public:
     plugin_base()
     {
     }
@@ -32,8 +32,13 @@ class plugin_base
         stret += SETTING_P(PSTR("espname"));
         stret += char(MQTT_TOPIC_SEPARATOR_CHAR);
         stret += name;
-        stret += char(MQTT_TOPIC_SEPARATOR_CHAR);
-        stret += action;
+
+        if (action.length() > 0)
+        {
+            stret += char(MQTT_TOPIC_SEPARATOR_CHAR);
+            stret += action;
+        }
+
         return stret;
     }
 

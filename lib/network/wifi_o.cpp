@@ -51,11 +51,13 @@ bool wifi_o::loop()
             WiFi.setAutoConnect(true);
             WiFi.setAutoReconnect(true);
             this->_change_state(STATE_STA_CONNECTED);
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[WIFI] CONNECTED!! MY IP: %s \n"), WiFi.localIP().toString().c_str());
-#endif
+            OZ_LOG_I_P(PSTR("[WIFI] CONNECTED!! MY IP: %s \n"), WiFi.localIP().toString().c_str());
             return true;
         case WL_CONNECTION_LOST:
+            break;
+        case WL_SCAN_COMPLETED:
+            break;
+        default:
             break;
         }
 
@@ -74,9 +76,7 @@ bool wifi_o::loop()
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[WIFI] CONNECTION LOST! \n"));
-#endif
+            OZ_LOG_I_P(PSTR("[WIFI] CONNECTION LOST! \n"));
             this->_change_state(STATE_STA_NOT_CONNECTED);
         }
     }
@@ -96,17 +96,15 @@ bool wifi_o::loop()
     {
         if (this->_sta_connection_try < WIFI_O_STA_CONNECTION_TRY)
         {
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[WIFI] CONNECTION FAILED! NEW TRY %d \n"), this->_sta_connection_try + 1);
-#endif
+            OZ_LOG_I_P(PSTR("[WIFI] CONNECTION FAILED! NEW TRY %d \n"), this->_sta_connection_try + 1);
+
             this->_sta_connection_try++;
             this->_change_state(STATE_STA_CONNECTION);
         }
         else
         {
-#ifdef DEBUG_ERROR
-            DEBUG_MSG_P(PSTR("[WIFI] CONNECTION FAILED! NO MORE TRY: START ACCESS POINT\n"));
-#endif
+            OZ_LOG_I_P(PSTR("[WIFI] CONNECTION FAILED! NO MORE TRY: START ACCESS POINT\n"));
+
             this->_change_state(STATE_AP_CREATE);
         }
     }
@@ -140,9 +138,7 @@ bool wifi_o::loop()
 
     case STATE_SCAN_START:
     {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[WIFI] WIFI SCAN BEGIN... \n"));
-#endif
+        OZ_LOG_I_P(PSTR("[WIFI] WIFI SCAN BEGIN... \n"));
         this->_startSCAN();
         this->_change_state(STATE_SCANIING);
     }
@@ -169,9 +165,8 @@ bool wifi_o::loop()
 
         if (scanResult > 0)
         {
-#ifdef DEBUG_LOG
-        DEBUG_MSG_P(PSTR("[WIFI] SCAN FINISH WHIT %d NETWORK FOUD \n"),scanResult);
-#endif
+            OZ_LOG_I_P(PSTR("[WIFI] SCAN FINISH WHIT %d NETWORK FOUD \n"), scanResult);
+
             if (this->_populate_network(scanResult))
             {
                 this->_change_state(STATE_STA_CONNECTION);
@@ -179,17 +174,13 @@ bool wifi_o::loop()
             }
             else
             {
-#ifdef DEBUG_ERROR
-                DEBUG_MSG_P(PSTR("[WIFI] NO NETWORK KNOWN START ACCESS POINT \n"));
-#endif
+                OZ_LOG_I_P(PSTR("[WIFI] NO NETWORK KNOWN START ACCESS POINT \n"));
                 this->_change_state(STATE_SCAN_NO_NETWORK);
             }
         }
         else
         {
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[WIFI] NO NETWORK FOUND START ACCESS POINT \n"));
-#endif
+            OZ_LOG_I_P(PSTR("[WIFI] NO NETWORK FOUND START ACCESS POINT \n"));
             this->_change_state(STATE_SCAN_NO_NETWORK);
         }
     }
@@ -222,55 +213,55 @@ void wifi_o::_change_state(wifi_o_states_t state)
     {
 
     case STATE_STA_CONNECTION:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: STA_CONNECTION \n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: STA_CONNECTION \n"));
         break;
 
     case STATE_STA_CONNECTING:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: STA_CONNECTING \n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: STA_CONNECTING \n"));
         break;
 
     case STATE_STA_CONNECTED:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: STA_CONNECTED\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: STA_CONNECTED\n"));
         break;
 
     case STATE_STA_NOT_CONNECTED:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: STA_NOT_CONNECTED\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: STA_NOT_CONNECTED\n"));
         break;
 
     case STATE_STA_FAILED:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: STA_FAILED\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: STA_FAILED\n"));
         break;
 
     case STATE_AP_CREATE:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: AP_CREATE \n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: AP_CREATE \n"));
         break;
 
     case STATE_AP_OK:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: AP_OK\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: AP_OK\n"));
         break;
 
     case STATE_AP_FAILED:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: AP_FAILED \n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: AP_FAILED \n"));
         break;
 
     case STATE_SCAN_START:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: SCAN_START\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: SCAN_START\n"));
         break;
 
     case STATE_SCANIING:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: SCANIING\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: SCANIING\n"));
         break;
 
     case STATE_SCAN_COMPLETE:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: SCAN_COMPLETE\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: SCAN_COMPLETE\n"));
         break;
 
     case STATE_SCAN_NO_NETWORK:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: SCAN_NO_NETWORK\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: SCAN_NO_NETWORK\n"));
         break;
 
     case STATE_SCAN_FAILED:
-        DEBUG_MSG_P(PSTR("[WIFI] STATE: SCAN_FAILED\n"));
+        OZ_LOG_V_P(PSTR("[WIFI] STATE: SCAN_FAILED\n"));
         break;
     };
 
@@ -300,7 +291,9 @@ bool wifi_o::_populate_network(uint8_t networkCount)
     uint8_t sec_scan;
     uint8_t *BSSID_scan;
     int32_t chan_scan;
+#ifndef ESP32
     bool hidden_scan;
+#endif
 
     bool found_any_know_network = false;
 
@@ -337,16 +330,12 @@ bool wifi_o::_populate_network(uint8_t networkCount)
             }
         }
 
-#ifdef DEBUG_LOG
-        {
-            DEBUG_MSG_P(PSTR("%s BSSID: %02X:%02X:%02X:%02X:%02X:%02X CH: %2d RSSI: %3d SSID: %s \n"),
-                        (known ? "-->" : "   "),
-                        BSSID_scan[0], BSSID_scan[1], BSSID_scan[2], BSSID_scan[3], BSSID_scan[4], BSSID_scan[5],
-                        chan_scan,
-                        rssi_scan,
-                        ssid_scan.c_str());
-        }
-#endif
+        OZ_LOG_I_P(PSTR("%s BSSID: %02X:%02X:%02X:%02X:%02X:%02X CH: %2d RSSI: %3d SSID: %s \n"),
+                   (known ? "-->" : "   "),
+                   BSSID_scan[0], BSSID_scan[1], BSSID_scan[2], BSSID_scan[3], BSSID_scan[4], BSSID_scan[5],
+                   chan_scan,
+                   rssi_scan,
+                   ssid_scan.c_str());
     }
 
     WiFi.scanDelete();
@@ -375,9 +364,7 @@ void wifi_o::_startSTA()
     // NO NETWORK FOUND
     if (network_number < 0)
     {
-#ifdef WIFI_O_DEBUG
-        DEBUG_MSG_P(PSTR("[WIFI] START STA NO NETWORK FOUD \n"));
-#endif
+        OZ_LOG_I_P(PSTR("[WIFI] START STA NO NETWORK FOUD \n"));
         return;
     }
 
@@ -390,14 +377,7 @@ void wifi_o::_startSTA()
     WiFi.hostname(this->espname);
 #endif
 
-    //if (network.ip != nullptr)
-    //{
-    //    WiFi.config(network.ip, network.gw, network.netmask, network.dns);
-    //}
-
-#ifdef DEBUG_LOG
-    DEBUG_MSG_P(PSTR("[WIFI] TRY TO CONNECT SSID: %s \n"), network.ssid.c_str());
-#endif
+    OZ_LOG_I_P(PSTR("[WIFI] TRY TO CONNECT SSID: %s \n"), network.ssid.c_str());
 
     if (network.channel == 0)
     {

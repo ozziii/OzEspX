@@ -6,7 +6,6 @@
 
 #include <configuration.h>
 #include <ticker_o.h>
-#include <debug_o.h>
 
 //Pins mode
 #define INPUT_MODE 0x01

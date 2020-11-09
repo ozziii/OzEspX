@@ -73,13 +73,11 @@ public:
 
             initialized = true;
 
-#ifdef DEBUG_LOG
-            DEBUG_MSG_P(PSTR("[BINARIY_SENSOR][%s] CREATE (READ PIN: %d) \n"), name.c_str(), _read_pin);
+            OZ_LOG_I_P(PSTR("[BINARIY_SENSOR][%s] CREATE (READ PIN: %d) \n"), name.c_str(), _read_pin);
         }
         else
         {
-            DEBUG_MSG_P(PSTR("[BINARIY_SENSOR][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
-#endif
+            OZ_LOG_E_P(PSTR("[BINARIY_SENSOR][%s][ERROR] WRONG INITIALZE STRING \n"), name.c_str());
         }
     }
 

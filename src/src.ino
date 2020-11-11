@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-/* Platformio lib finde problem
+/* Platformio lib find problem
   Include for I2C and SPI protocol  */
 #include <Wire.h>
 #include <SPI.h>
@@ -35,8 +35,6 @@ void web_callback()
   WebServer.begin(mqtt_callback);
 }
 #endif
-
-
 
 /* Setting Up */
 void setup()

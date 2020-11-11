@@ -57,6 +57,9 @@ const html_plugin plugin_list[] = {
     {vmc_plugin::ClassName(), "[*]/[NAME]/[ENABLE]/[PWM]/[DIRECTION]"},
 #endif
 
+#ifdef PLUGIN_LORATOMQTT
+    {LoraToMqtt::ClassName(), "[*]/[NAME]/[AUX]/[M0]/[M1]/[UART_NUMBER]"},
+#endif
 
 };
 
@@ -303,6 +306,20 @@ void plugins_o::createPlugIn(
         if (item->isInitialized())
         {
             _responses->push_back(item);
+        }
+        return;
+    }
+#endif
+
+#ifdef PLUGIN_LORATOMQTT
+    //**************  VMC PUGIN *************
+    if (strcmp(name, LoraToMqtt::ClassName()) == 0)
+    {
+        LoraToMqtt *item = new LoraToMqtt(initString.c_str());
+        if (item->isInitialized())
+        {
+            _responses->push_back(item);
+            _sensors->push_back(item);
         }
         return;
     }

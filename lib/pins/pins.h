@@ -7,6 +7,7 @@
 #include <configuration.h>
 #include <ticker_o.h>
 
+
 //Pins mode
 #define INPUT_MODE 0x01
 #define OUTPUT_MODE 0x02

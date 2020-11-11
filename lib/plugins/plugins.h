@@ -51,6 +51,10 @@
 #include "vmc_plugin.h"
 #endif
 
+#ifdef PLUGIN_LORATOMQTT
+#include "LoraToMqtt.h"
+#endif
+
 struct html_plugin
 {
     const char *name;

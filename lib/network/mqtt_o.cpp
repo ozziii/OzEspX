@@ -99,7 +99,6 @@ bool mqtt_o::mqttPublish(const char *topic, const char *message)
 
 void mqtt_o::mqttSubscribe(const char *topic)
 {
-    _mqtt.state();
     _mqtt_topics.push_back(topic);
 }
 
@@ -240,7 +239,8 @@ void mqtt_o::_mqttSubscribe(const char *topic)
 
 #else
         _mqtt.subscribe(topic, MQTT_QoS);
-        OZ_LOG_I_P(PSTR("[MQTT] Subscribing to %s\n"), topic);
+        
+        OZ_LOG_I_P(PSTR("[MQTT] Subscribing to : %s \n"), topic);
 
 #endif
     }

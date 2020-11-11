@@ -15,7 +15,7 @@
 #define DEVICE_NAME "ESP8622 LoLin NodeMcu V3"
 #endif
 
-#define SW_VERSION "0.7.2 rc"
+#define SW_VERSION "0.8.0 rc"
 
 /*===========================================================================
 * ============================= DEBUG CONFIGURATION =========================
@@ -28,7 +28,7 @@
 #define DEBUG_ERROR
 #define DEBUG_WARNING
 #define DEBUG_INFO
-//#define DEBUG_VERBOSE
+#define DEBUG_VERBOSE
 
 
 #define DEBUG_WEB_SUPPORT
@@ -67,19 +67,24 @@
 
 #endif
 
+
+/// SYSTEM DELAY
 #define LOOP_DELAY 300
 
+
+//// SATBILITY 
 #define STABILITY_CHECK_ENABLE
 
 #ifdef STABILITY_CHECK_ENABLE
-#define STABILITY_CHECK_TIME_S 60
+#define STABILITY_CHECK_TIME_S 30
 #define MAX_CRASH_COUNT 5
 #endif
 
-#define SYSTEM_REBOOT_TIME 0
 
 // Enable OTA update
 #define OTA
+
+
 
 /*===========================================================================
 * ============================= WIFI CONFIGURATION ==========================
@@ -92,22 +97,27 @@
 
 
 // Set Wifi Power to max
-#define MAX_POWER_WIFI
+//#define MAX_POWER_WIFI
 
 /*===========================================================================
 * ============================= MQTT CONFIGURATION ==========================
 * ===========================================================================*/
 
+// DELAY
 #define MQTT_RECONNECT_DELAY_MIN 5000  // Try to reconnect in 5 seconds upon disconnection
 #define MQTT_RECONNECT_DELAY_STEP 5000 // Increase the reconnect delay in 5 seconds after each failed attempt
 #define MQTT_RECONNECT_DELAY_MAX 120000
+
+
 #define MQTT_KEEPALIVE 300
 
 
 
 //#define MQTT_USE_ASYNC
 
-#define MQTT_TOPIC_SEPARATOR_CHAR 47 
+
+/// MQTT HASSIO COMUNICATION PROTOCOLL
+#define MQTT_TOPIC_SEPARATOR_CHAR 47    
 
 #define MQTT_COMMAND_ACTION "action"
 #define MQTT_COMMAND_STATE "state"
@@ -134,6 +144,7 @@
 #define MQTT_PAYLOAD_AVAILABLE      "online"
 #define MQTT_PAYLOAD_NOT_AVAILABLE  "offline"
 
+// STATE 
 #define MQTT_STATE_ON "ON"
 #define MQTT_STATE_OFF "OFF"
 
@@ -146,26 +157,24 @@
 * ============================= HARDWARE CONFIGURATION ======================
 * ===========================================================================*/
 
+// PIN PUMP DELAY
 #define DFAULT_PUMP_DELAY 300
 
+// DEBOUNCING 
 #define DEBOUNCING_DELAY 500
 
-#ifndef ESP32
-#define MAX_GPIO_NUMBER 10
-#endif
-
-#ifdef ESP32
-#define MAX_INTERRUPT_SLOT 50
-#define MAX_INTERRUPT_TASK_PRIORITY 3
-
-// PWM 
+#ifdef ESP32  
+// PWM SETTING 
 #define PWM_FREQUENCY 5000
 #define PWM_RESOLUTION 10
-#define PWM_MAX_CHANNEL 15
 
+
+#define PWM_MAX_CHANNEL 15              // NOT CHANHGE !!!
+#define MAX_INTERRUPT_SLOT 50           // NOT CHANHGE !!!
+#define MAX_INTERRUPT_TASK_PRIORITY 3   // NOT CHANHGE !!!
+#else
+#define MAX_GPIO_NUMBER 10              // NOT CHANHGE !!!
 #endif
-
-#define MIN_SENSOR_DELAY LOOP_DELAY  //millisecond
 
 /*===========================================================================
 * ============================= WEB SERVER CONFIGURATION ====================
@@ -174,11 +183,15 @@
 *   WEB COMMAND LIST  IMPORTATN / BEFORE COMMAND!!!
 */
 
+/// ENABLE WEB SERVER
 #define WEBSERVER
 
 
+
+// IF WEB SERVER ENABLED
 #ifdef WEBSERVER
 
+// MAX JSON DOC SIZE
 #define JSON_DOCUMENT_SIZE  1024
 
 #ifdef ESP32
@@ -236,6 +249,12 @@
 * ============================= PLUG IN ENABLER =============================
 * ===========================================================================
 */
+
+// PLUG-IN EXECUTE SENSOR DELAY
+#define MIN_SENSOR_DELAY LOOP_DELAY  //millisecond
+
+
+
 
 //#define PLUGIN_RADIOFREQUENCY_REVICER
 //#define PLUGIN_JSNSR04TV2
@@ -311,8 +330,8 @@
 * ===========================================================================*/
 #ifdef PLUGIN_VMC
 
-#define VMC_STATE_AUTO    "auto"
-#define VMC_STATE_IN    "in"
+#define VMC_STATE_AUTO   "auto"
+#define VMC_STATE_IN     "in"
 #define VMC_STATE_OUT    "out"
 #define VMC_STATE_OFF    "off"
 

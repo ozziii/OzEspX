@@ -37,13 +37,15 @@
 #include <LoRa_E32.h>
 #include <e32cp.h>
 
-#define LORA_UART_DELAY 200
+#define LORA_UART_DELAY  LOOP_DELAY + 2000
 
 /**
-*            
+*        
+//12/lora/0/3/14/13/21/2
+
 *     LORA TO MQTT
 *
-*     Init String:  {[*]/[NAME]/ADDRESS/CHANNEL/AUX/M0/M1/[TX : UART_NUMBER]/RX }
+*     Init String:  {[*]/[NAME]/AUX/M0/M1/[UART_NUMBER] }
 *
 *     Topic espname/Lora/NAME/Address/action   => 
 *
@@ -66,13 +68,12 @@ private:
     String _root_topic;
     LoRa_E32 *_lora;
     e32cp *_protocoll;
+    HardwareSerial * _serial;
     uint8_t 
         _uart_number,
         _aux,
         _m1,
-        _m0,
-        _address,
-        _channel;
+        _m0;
 };
 
 #endif

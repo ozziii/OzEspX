@@ -38,3 +38,4 @@
 node_modules
 lib/setting/default_settings.h
 src/src.ino.cpp
+package-lock.json

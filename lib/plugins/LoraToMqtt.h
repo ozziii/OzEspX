@@ -37,7 +37,7 @@
 #include <LoRa_E32.h>
 #include <e32cp.h>
 
-#define LORA_UART_DELAY  LOOP_DELAY + 2000
+#define LORA_UART_DELAY  LOOP_DELAY + 20
 
 /**
 *        

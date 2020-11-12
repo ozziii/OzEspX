@@ -23,15 +23,20 @@ LoraToMqtt::LoraToMqtt(const char *init)
 
         this->sensor_delay = LORA_UART_DELAY;
         this->_serial = new HardwareSerial(this->_uart_number);
-        this->_lora = new LoRa_E32(this->_serial, this->_aux, this->_m1, this->_m0);
-        this->_protocoll = new e32cp(_lora, E32_SERVER_ADDRESS, E32_SERVER_CHANNEL);
+        this->_lora = new LoRa_E32(this->_serial, this->_aux, this->_m0, this->_m1);
+        this->_protocoll = new e32cp(this->_lora);
 
         if (this->_protocoll->begin())
         {
             if (this->_protocoll->config())
-
             {
                 OZ_LOG_I_P(PSTR("[LORA][%s] LORA TO MQTT CONFIG COMLETE \n "), this->name.c_str());
+                OZ_LOG_I_P(PSTR("[LORA][%s] AUX:[%u] M0:[%u] M1:[%u] UART:[%u] \n "), 
+                this->name.c_str(),
+                this->_aux,
+                this->_m0,
+                this->_m1,
+                this->_uart_number);
 
                 this->initialized = true;
             }
@@ -68,15 +73,14 @@ bool LoraToMqtt::sendResponse(String topic, String Message)
 
     String loramessage = topic_array[3] + char(PLUGIN_INIT_SEPARATOR_CHAR) + Message;
 
-    if (this->_protocoll->sleepyWake(client_address, this->_channel, loramessage))
+    if (this->_protocoll->sleepyWake(client_address, E32_SERVER_CHANNEL, loramessage))
     {
         OZ_LOG_V_P(PSTR("[LORA][%s] MQTT -> LORA | SEND WAKE COMMAND : [%s] TO CLIENT : [%u] \n "), this->name.c_str(), loramessage.c_str(), client_address);
     }
     else
     {
         OZ_LOG_E_P(PSTR("[LORA][%s][ERROR] PROBLEM WHEN SENDING LoRa \n "), this->name.c_str());
-        OZ_LOG_E_P(PSTR("[LORA][%s][ERROR] Address : %u , Channel: %u \n "), this->name.c_str(), client_address, this->_channel);
-
+        OZ_LOG_E_P(PSTR("[LORA][%s][ERROR] Address : %u , Channel: %u \n "), this->name.c_str(), client_address, E32_SERVER_CHANNEL);
     }
 
     return true;
